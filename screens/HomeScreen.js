@@ -16,7 +16,7 @@ import Animated from "react-native-reanimated";
 import Colors from "../constants/Colors";
 import dummyData from "../dummyData.js/data";
 import JobCard from "../components/JobCard";
-import ActionSheet from "../components/ActionSheet";
+import Modal from "../components/Modal";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -25,11 +25,10 @@ function HomeScreen(props) {
 
   const getData = (val) => {
     setIsPressed(false);
-    console.log(val);
   };
 
   return (
-    <View style={{ width, height }}>
+    <View style={{ flex: 1, width, height }}>
       <View style={styles.container}>
         <View
           style={{
@@ -175,7 +174,7 @@ function HomeScreen(props) {
           />
         </View>
       </View>
-      <ActionSheet isPressed={isPressed} sendData={getData} />
+      <Modal isPressed={isPressed} sendData={getData} />
     </View>
   );
 }

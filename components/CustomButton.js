@@ -1,6 +1,8 @@
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 
+import Colors from "../constants/Colors";
+
 function CustomButton(props) {
   return (
     <TouchableOpacity
@@ -9,17 +11,9 @@ function CustomButton(props) {
       style={{
         ...styles.button,
         ...props.style,
-        backgroundColor: "#21b4f0",
       }}
     >
-      <Text
-        style={{
-          fontFamily: "OpenSans-SemiBold",
-          fontSize: 16,
-          color: "white",
-          textAlign: "center",
-        }}
-      >
+      <Text style={{ ...styles.titleStyle, ...props.titleStyle }}>
         {props.title}
       </Text>
     </TouchableOpacity>
@@ -35,6 +29,13 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     borderRadius: 4,
     alignSelf: "center",
+    backgroundColor: Colors.primary,
+  },
+  titleStyle: {
+    fontFamily: "OpenSans-Regular",
+    fontSize: 16,
+    color: "white",
+    textAlign: "center",
   },
 });
 

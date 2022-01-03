@@ -10,7 +10,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthNavigator from "./navigation/AuthNavigator";
 
 import HomeScreen from "./screens/HomeScreen";
-import ActionSheet from "./components/ActionSheet";
 
 enableScreens();
 

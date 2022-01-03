@@ -1,5 +1,6 @@
 export default [
   {
+    id: 1,
     heading: "Customer Success Managerrrrrrrrrr",
     companyName: "Iraitech Innovation & Technologies",
     jobType: "Internship",
@@ -10,6 +11,7 @@ export default [
     postedDate: "Sept 21, 2021",
   },
   {
+    id: 2,
     heading: "Tele Caller",
     companyName: "Iraitech Innovations and Technologies Pvt. Ltd.",
     jobType: "Full-time",
@@ -20,6 +22,7 @@ export default [
     postedDate: "Sept 21, 2021",
   },
   {
+    id: 3,
     heading: "Creative Content Writer",
     companyName: "Iraitech Innovations and Technologies Pvt. Ltd. ",
     jobType: "Internship",
@@ -30,6 +33,7 @@ export default [
     postedDate: "Sept 21, 2021",
   },
   {
+    id: 4,
     heading: "Business Development ",
     companyName: "DPI Infotech ",
     jobType: "Internship",
@@ -40,6 +44,7 @@ export default [
     postedDate: "Sept 21, 2021",
   },
   {
+    id: 5,
     heading: "Video Creator ",
     companyName: "Iraitech Innovations and Technologies Pvt. Ltd. ",
     jobType: "Internship",
@@ -50,6 +55,7 @@ export default [
     postedDate: "Sept 21, 2021",
   },
   {
+    id: 6,
     heading: "Sales Executive ",
     companyName: "Lugsto Services Private Limited",
     jobType: "Full-time",
