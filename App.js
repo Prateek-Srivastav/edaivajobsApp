@@ -10,6 +10,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthNavigator from "./navigation/AuthNavigator";
 
 import HomeScreen from "./screens/HomeScreen";
+import JobsNavigator from "./navigation/JobsNavigator";
 
 enableScreens();
 
@@ -18,6 +19,7 @@ const fetchFonts = () => {
     "OpenSans-Medium": require("./assets/fonts/OpenSans-Medium.ttf"),
     "OpenSans-Regular": require("./assets/fonts/OpenSans-Regular.ttf"),
     "OpenSans-SemiBold": require("./assets/fonts/OpenSans-SemiBold.ttf"),
+    "OpenSans-Bold": require("./assets/fonts/OpenSans-Bold.ttf"),
   });
 };
 
@@ -36,7 +38,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <HomeScreen />
+      <JobsNavigator />
     </NavigationContainer>
   );
 }

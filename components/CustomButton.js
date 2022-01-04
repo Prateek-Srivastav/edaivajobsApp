@@ -7,7 +7,7 @@ function CustomButton(props) {
   return (
     <TouchableOpacity
       {...props}
-      activeOpacity={0.4}
+      activeOpacity={0.7}
       style={{
         ...styles.button,
         ...props.style,

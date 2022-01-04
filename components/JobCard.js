@@ -7,6 +7,7 @@ import Colors from "../constants/Colors";
 function JobCard(props) {
   return (
     <TouchableOpacity
+      {...props}
       activeOpacity={0.5}
       style={{ ...styles.container, ...props.style }}
     >

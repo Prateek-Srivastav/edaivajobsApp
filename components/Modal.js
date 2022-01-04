@@ -8,6 +8,8 @@ import {
   TouchableNativeFeedback,
   Dimensions,
   TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
   // Dimensions,
 } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
@@ -18,12 +20,14 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 
-import { Picker } from "@react-native-picker/picker";
-
-import { Ionicons, Feather } from "@expo/vector-icons";
+import { Feather, AntDesign } from "@expo/vector-icons";
 
 import Colors from "../constants/Colors";
 import CustomButton from "./CustomButton";
+import AppPicker from "./AppPicker";
+import AppText from "./AppText";
+import Card from "./Card";
+import CardInput from "./CardInput";
 
 // const { width, height } = Dimensions.get("screen");
 
@@ -37,8 +41,12 @@ const SPRING_CONFIG = {
 
 function Modal(props) {
   const dimensions = useWindowDimensions();
-  const [selectedLanguage, setSelectedLanguage] = useState();
   const [isLocationShown, setIsLocationShown] = useState(false);
+  const [isJobTypeShown, setIsJobTypeShown] = useState(false);
+  const [isSkillsShown, setIsSkillsShown] = useState(false);
+  const [selectedJobType, setSelectedJobType] = useState("");
+  const [skillsItemArray, setSkillsItemArray] = useState([]);
+  const [skillItemText, setSkillItemText] = useState();
 
   const top = useSharedValue(dimensions.height);
 
@@ -65,18 +73,61 @@ function Modal(props) {
   };
 
   if (props.isPressed) {
-    console.log("pressed");
     top.value = withSpring(0, SPRING_CONFIG);
   }
 
   const FilterItem = (props) => {
     return (
-      <TouchableOpacity {...props} style={styles.modalListItem}>
-        <Ionicons name="add" size={22} color={Colors.primary} />
+      <TouchableOpacity
+        {...props}
+        activeOpacity={0.5}
+        style={styles.modalListItem}
+      >
         <Text style={styles.itemText}>{props.title}</Text>
+        <AntDesign
+          name={props.isShown ? "minus" : "plus"}
+          size={20}
+          color={Colors.primary}
+        />
       </TouchableOpacity>
     );
   };
+
+  const SkillsFilterItem = skillsItemArray.map((skillItem) => (
+    <View
+      style={{
+        flexDirection: "row",
+        borderWidth: 1,
+        alignSelf: "flex-start",
+        justifyContent: "center",
+        alignItems: "center",
+        borderColor: "#0AB4F14D",
+        backgroundColor: "#B9ECFF4D",
+        borderRadius: 3,
+        marginLeft: 10,
+        marginTop: 10,
+      }}
+    >
+      <AppText style={{ marginHorizontal: 5, color: Colors.primary }}>
+        {skillItem}
+      </AppText>
+      <TouchableOpacity
+        onPress={() => {
+          const index = skillsItemArray.indexOf(skillItem);
+          console.log(index);
+          skillsItemArray.splice(index, 1);
+        }}
+        style={{
+          borderWidth: 1,
+          margin: 3,
+          borderColor: "#0AB4F14D",
+          borderRadius: 3,
+        }}
+      >
+        <Feather name="x" size={17} color={Colors.primary} />
+      </TouchableOpacity>
+    </View>
+  ));
 
   return (
     <PanGestureHandler onGestureEvent={gestureHandler}>
@@ -98,29 +149,152 @@ function Modal(props) {
             </View>
           </View>
 
-          <View style={{ flex: 1, width: "100%" }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{ flex: 1, width: "100%" }}
+          >
             <FilterItem
               title="Location"
               onPress={() => setIsLocationShown(!isLocationShown)}
+              isShown={isLocationShown}
             />
             {isLocationShown && (
-              <View>
-                <Text>Location</Text>
+              <View
+                style={{
+                  // padding: 10,
+                  // borderWidth: 1,
+                  paddingHorizontal: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: 10,
+                }}
+              >
+                <AppPicker title="All Countries" />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    width: "48.5%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <AppPicker title="All States" />
+                  <AppPicker title="City" />
+                </View>
               </View>
             )}
-            <FilterItem title="Job Type" />
+            <FilterItem
+              title="Job Type"
+              onPress={() => setIsJobTypeShown(!isJobTypeShown)}
+              isShown={isJobTypeShown}
+            />
+            {isJobTypeShown && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: 10,
+                  justifyContent: "center",
+                }}
+              >
+                <Card
+                  touchable
+                  style={{
+                    marginHorizontal: 10,
+                    justifyContent: "space-evenly",
+                    flex: 1,
+                  }}
+                  onPress={() => {
+                    if (selectedJobType === "internship")
+                      setSelectedJobType("");
+                    else setSelectedJobType("internship");
+                  }}
+                >
+                  <View
+                    style={{
+                      ...styles.dotContainer,
+                      borderColor:
+                        selectedJobType === "internship"
+                          ? Colors.primary
+                          : "#ccc",
+                    }}
+                  >
+                    <View
+                      style={{
+                        ...styles.dot,
+                        backgroundColor:
+                          selectedJobType === "internship"
+                            ? Colors.primary
+                            : "white",
+                      }}
+                    />
+                  </View>
+                  <AppText>Internship</AppText>
+                </Card>
+                <Card
+                  onPress={() => {
+                    if (selectedJobType === "ft") setSelectedJobType("");
+                    else setSelectedJobType("ft");
+                  }}
+                  touchable
+                  style={{
+                    flex: 1,
+                    marginHorizontal: 10,
+                    justifyContent: "space-evenly",
+                  }}
+                >
+                  <View
+                    style={{
+                      ...styles.dotContainer,
+                      borderColor:
+                        selectedJobType === "ft" ? Colors.primary : "#ccc",
+                    }}
+                  >
+                    <View
+                      style={{
+                        ...styles.dot,
+                        backgroundColor:
+                          selectedJobType === "ft" ? Colors.primary : "white",
+                      }}
+                    />
+                  </View>
+                  <AppText>Full Time</AppText>
+                </Card>
+              </View>
+            )}
             <FilterItem title="Experience" />
-            <FilterItem title="Skills" />
-            <Picker
-              selectedValue={selectedLanguage}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedLanguage(itemValue)
-              }
-            >
-              <Picker.Item label="Java" value="java" />
-              <Picker.Item label="JavaScript" value="js" />
-            </Picker>
-          </View>
+            <FilterItem
+              title="Skills"
+              isShown={isSkillsShown}
+              onPress={() => setIsSkillsShown(!isSkillsShown)}
+            />
+            {isSkillsShown && (
+              <>
+                <CardInput
+                  // style={{ marginBottom: 50 }}
+
+                  placeholder="Press enter to add"
+                  onChangeText={(val) => {
+                    setSkillItemText(val);
+                  }}
+                  onSubmitEditing={() => {
+                    setSkillsItemArray([...skillsItemArray, skillItemText]);
+                    setSkillItemText("");
+                  }}
+                  value={skillItemText}
+                />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    marginBottom: 50,
+                  }}
+                >
+                  {SkillsFilterItem}
+                </View>
+              </>
+            )}
+          </ScrollView>
           <View
             style={{
               flexDirection: "row",
@@ -179,6 +353,25 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: -15,
   },
+  dot: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: 12,
+    width: 12,
+    overflow: "hidden",
+    borderRadius: 6,
+    borderColor: "#ccc",
+    backgroundColor: "#ccc",
+  },
+  dotContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 9,
+    height: 18,
+    width: 18,
+  },
   headingContainer: {
     // flex: 1,
     width: "100%",
@@ -186,7 +379,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 15,
+    // paddingRight: 20,
   },
   headingText: {
     color: Colors.primary,
@@ -227,7 +421,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     elevation: 5,
     padding: 20,
-    paddingRight: 20,
+    // paddingRight: 20,
     // justifyContent: "space-between",
     alignItems: "center",
   },
@@ -235,9 +429,10 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     // borderWidth: 1,
-    // justifyContent: "space-between",
+    justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 5,
+    marginVertical: 7,
+    // marginTop: 15,
   },
 });
 

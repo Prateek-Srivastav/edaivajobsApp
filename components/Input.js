@@ -67,7 +67,7 @@ const Input = React.forwardRef((props, ref) => {
 
   return (
     <View style={styles.formControl}>
-      <Text style={styles.label}>{props.label}</Text>
+      {props.label && <Text style={styles.label}>{props.label}</Text>}
       <View style={{ ...styles.input, ...props.style }}>
         <TextInput
           {...props}

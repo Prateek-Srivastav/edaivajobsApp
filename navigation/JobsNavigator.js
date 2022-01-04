@@ -3,11 +3,10 @@ import { View, Image, Text, TouchableOpacity } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TransitionPresets } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 
-import WelcomeScreen from "../screens/WelcomeScreen";
-import LoginScreen from "../screens/LoginScreen";
-import RegisterScreen from "../screens/RegisterScreen";
+import HomeScreen from "../screens/HomeScreen";
+import JobDetailScreen from "../screens/JobDetailScreen";
 
 import Colors from "../constants/Colors";
 
@@ -38,14 +37,6 @@ const leftHeader = () => {
           />
         </TouchableOpacity>
       )}
-      <Image
-        source={require("../assets/edaiva_logo_edit-03.png")}
-        style={{
-          height: 30,
-          width: 140,
-          top: 2,
-        }}
-      />
     </View>
   );
 };
@@ -54,39 +45,31 @@ const rightLoginHeader = () => {
   const navigation = useNavigation();
 
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-      <Text
-        style={{
-          fontFamily: "OpenSans-Medium",
-          fontSize: 16,
-          color: Colors.primary,
-        }}
-      >
-        Register
-      </Text>
+    <TouchableOpacity style={{ marginRight: 5 }}>
+      <AntDesign name="sharealt" size={23} color={Colors.primary} />
     </TouchableOpacity>
   );
 };
 
-const rightRegisterHeader = () => {
-  const navigation = useNavigation();
+// const rightRegisterHeader = () => {
+//   const navigation = useNavigation();
 
-  return (
-    <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-      <Text
-        style={{
-          fontFamily: "OpenSans-Medium",
-          fontSize: 16,
-          color: Colors.primary,
-        }}
-      >
-        Login
-      </Text>
-    </TouchableOpacity>
-  );
-};
+//   return (
+//     <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+//       <Text
+//         style={{
+//           fontFamily: "OpenSans-Medium",
+//           fontSize: 16,
+//           color: Colors.primary,
+//         }}
+//       >
+//         Login
+//       </Text>
+//     </TouchableOpacity>
+//   );
+// };
 
-const AuthNavigator = () => (
+const JobsNavigator = () => (
   <Stack.Navigator
     screenOptions={{
       headerLeft: () => leftHeader(),
@@ -95,29 +78,30 @@ const AuthNavigator = () => (
     }}
   >
     <Stack.Screen
-      name="Welcome"
-      component={WelcomeScreen}
+      name="Home"
+      component={HomeScreen}
       options={{
-        headerShadowVisible: false,
-        headerStyle: { backgroundColor: "#FDFDFD" },
-        headerRight: () => rightLoginHeader(),
+        //   headerShadowVisible: false,
+        headerShown: false,
+        // headerStyle: { backgroundColor: "#FDFDFD" },
+        // headerRight: () => rightLoginHeader(),
       }}
     />
     <Stack.Screen
-      name="Login"
-      component={LoginScreen}
+      name="JobDetail"
+      component={JobDetailScreen}
       options={{
         headerRight: () => rightLoginHeader(),
       }}
     />
-    <Stack.Screen
+    {/* <Stack.Screen
       name="Register"
       component={RegisterScreen}
       options={{
         headerRight: () => rightRegisterHeader(),
       }}
-    />
+    /> */}
   </Stack.Navigator>
 );
 
-export default AuthNavigator;
+export default JobsNavigator;

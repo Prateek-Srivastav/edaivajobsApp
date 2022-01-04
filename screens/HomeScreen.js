@@ -20,7 +20,7 @@ import Modal from "../components/Modal";
 
 const { width, height } = Dimensions.get("screen");
 
-function HomeScreen(props) {
+function HomeScreen({ navigation }) {
   const [isPressed, setIsPressed] = useState(false);
 
   const getData = (val) => {
@@ -162,6 +162,7 @@ function HomeScreen(props) {
             data={dummyData}
             renderItem={(itemData) => (
               <JobCard
+                onPress={() => navigation.navigate("JobDetail", { itemData })}
                 heading={itemData.item.heading}
                 companyName={itemData.item.companyName}
                 jobType={itemData.item.jobType}
