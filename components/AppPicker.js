@@ -1,13 +1,17 @@
 import React from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 
-import { Ionicons } from "@expo/vector-icons";
-
 function AppPicker(props) {
   return (
-    <TouchableOpacity activeOpacity={0.7} style={styles.container}>
-      <Text style={styles.title}>{props.title}</Text>
-      <Ionicons name="chevron-down" size={15} color="#817E7E" />
+    <TouchableOpacity
+      {...props}
+      activeOpacity={0.7}
+      style={{ ...styles.container, ...props.style }}
+    >
+      <Text style={{ ...styles.title, ...props.titleStyle }}>
+        {props.title}
+      </Text>
+      {props.icon}
     </TouchableOpacity>
   );
 }

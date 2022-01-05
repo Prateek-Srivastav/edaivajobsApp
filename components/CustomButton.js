@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
   },
   titleStyle: {
-    fontFamily: "OpenSans-Regular",
+    fontFamily: "OpenSans-Medium",
     fontSize: 16,
     color: "white",
     textAlign: "center",

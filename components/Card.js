@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "center",
+    // alignItems: "center",
     elevation: 3,
     backgroundColor: "white",
     borderRadius: 3,

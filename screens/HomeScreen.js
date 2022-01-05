@@ -10,13 +10,12 @@ import {
   Dimensions,
 } from "react-native";
 import { Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
-// import BottomSheet from "reanimated-bottom-sheet";
-import Animated from "react-native-reanimated";
 
 import Colors from "../constants/Colors";
 import dummyData from "../dummyData.js/data";
 import JobCard from "../components/JobCard";
-import Modal from "../components/Modal";
+import AppModal from "../components/AppModal";
+import FilterModalContent from "../components/FilterModalContent";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -169,13 +168,21 @@ function HomeScreen({ navigation }) {
                 location={itemData.item.location}
                 description={itemData.item.description}
                 postedDate={itemData.item.postedDate}
-                applied={itemData.item.applied}
+                isApplied={itemData.item.isApplied}
               />
             )}
           />
         </View>
       </View>
-      <Modal isPressed={isPressed} sendData={getData} />
+      <AppModal
+        numOfButton={2}
+        heading="Filter"
+        isReset
+        isPressed={isPressed}
+        sendData={getData}
+      >
+        <FilterModalContent />
+      </AppModal>
     </View>
   );
 }
@@ -186,7 +193,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#FDFDFD",
-    paddingTop: 20,
+    paddingTop: 40,
   },
   dpContainer: {
     borderColor: Colors.primary,
