@@ -11,6 +11,8 @@ import AuthNavigator from "./navigation/AuthNavigator";
 
 import HomeScreen from "./screens/HomeScreen";
 import JobsNavigator from "./navigation/JobsNavigator";
+import ProfileScreen from "./screens/ProfileScreen";
+import ProfileNavigator from "./navigation/ProfileNavigator";
 
 enableScreens();
 
@@ -38,7 +40,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <JobsNavigator />
+      <ProfileNavigator />
     </NavigationContainer>
   );
 }

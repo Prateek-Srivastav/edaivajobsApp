@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.bg,
     // width: "100%",
   },
   detailsHeading: {

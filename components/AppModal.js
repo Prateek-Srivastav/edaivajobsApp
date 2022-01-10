@@ -163,11 +163,13 @@ const styles = StyleSheet.create({
   line: {
     // height: 27,
     width: width,
-    height: 1,
+    height: 1.6,
     borderRadius: 10,
     marginHorizontal: 5,
-    backgroundColor: Colors.cardBlue,
+    backgroundColor: "#0AB4F1",
     elevation: 1,
+    marginBottom: 10,
+    opacity: 0.1,
   },
   modalContainer: {
     flex: 1,
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
     // marginHorizontal: 5,
   },
   modalContentContainer: {
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.bg,
     top: Dimensions.get("window").height / 10,
     flex: 1,
     width: "100%",

@@ -1,7 +1,7 @@
 export default [
   {
     id: 1,
-    heading: "Customer Success Managerrrrrrrrrr",
+    heading: "Customer Success Managerrrrrr",
     companyName: "Iraitech Innovation & Technologies",
     jobType: "Internship",
     location: "Old delhi, Delhi",
