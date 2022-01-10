@@ -6,25 +6,28 @@ import AppText from "./AppText";
 
 function CardInput(props) {
   return (
-    <View style={{ flex: 1, width: "100%" }}>
+    <View
+      style={{
+        ...styles.container,
+        ...props.style,
+      }}
+    >
       {props.label && (
         <AppText
           style={{
             alignSelf: "flex-start",
-            marginBottom: 5,
+            marginVertical: 5,
             ...props.labelStyle,
           }}
         >
           {props.label}
         </AppText>
       )}
-      <View style={{ ...props.style, ...styles.container }}>
+      <View style={{ ...props.inputStyle, ...styles.inputContainer }}>
         <TextInput
           {...props}
           style={{
-            flex: 1,
-            marginHorizontal: 5,
-            color: Colors.black,
+            ...styles.input,
             textAlignVertical: props.multiline ? "top" : null,
             marginTop: props.multiline ? 6 : 0,
           }}
@@ -36,6 +39,15 @@ function CardInput(props) {
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
+    marginBottom: 10,
+  },
+  input: {
+    flex: 1,
+    marginHorizontal: 5,
+    color: Colors.black,
+  },
+  inputContainer: {
     // flex: 1,
     flexDirection: "row",
     alignItems: "center",
@@ -45,7 +57,6 @@ const styles = StyleSheet.create({
     // marginHorizontal: 10,
     borderRadius: 3,
     // width: "100%",
-    marginBottom: 10,
   },
 });
 

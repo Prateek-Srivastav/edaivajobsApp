@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableNativeFeedback,
 } from "react-native";
-import { FontAwesome, MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 
 import { Feather } from "@expo/vector-icons";
 

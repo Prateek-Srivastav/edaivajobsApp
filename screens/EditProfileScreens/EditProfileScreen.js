@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import AppPicker from "../components/AppPicker";
+import AppPicker from "../../components/AppPicker";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -20,13 +20,13 @@ import {
   AntDesign,
 } from "@expo/vector-icons";
 
-import Card from "../components/Card";
-import CustomButton from "../components/CustomButton";
-import Colors from "../constants/Colors";
-import AppText from "../components/AppText";
-import CardInput from "../components/CardInput";
-import ExperienceCard from "../components/ExperienceCard";
-import dummyData from "../dummyData.js/data";
+import Card from "../../components/Card";
+import CustomButton from "../../components/CustomButton";
+import Colors from "../../constants/Colors";
+import AppText from "../../components/AppText";
+import CardInput from "../../components/CardInput";
+import ExperienceCard from "../../components/ExperienceCard";
+import dummyData from "../../dummyData.js/data";
 
 const { width, height } = Dimensions.get("window");
 
@@ -142,7 +142,7 @@ function EditProfileScreen(props) {
         }}
       >
         <Image
-          source={require("../assets/dummyDP.png")}
+          source={require("../../assets/dummyDP.png")}
           style={{ height: 70, width: 70, marginRight: 5, marginLeft: 8 }}
         />
         <View style={{ width: "70%", marginRight: 5 }}>
@@ -164,26 +164,8 @@ function EditProfileScreen(props) {
           iconColor={Colors.primary}
           title="Personal Details"
           isShown={isDetailShown}
-        >
-          {isDetailShown && (
-            <>
-              <DetailsCard
-                label="Date of Birth"
-                iconName="date-range"
-                onPress={() => {
-                  setOrigin("birthDate");
-                  showDatepicker();
-                }}
-              />
-              <DetailsInput label="Phone" />
-              <DetailsInput label="Address" placeholder="Apartment, Landmark" />
-              <CardInput placeholder="Street" />
-              <CardInput placeholder="City" />
-              <AppPicker style={{ marginVertical: 0 }} title="State" />
-              <AppPicker title="Country" />
-            </>
-          )}
-        </AppPicker>
+        />
+
         <AppPicker
           onPress={() => setIsAboutShown(!isAboutShown)}
           style={{ alignSelf: "center", width: "97%" }}
@@ -199,7 +181,7 @@ function EditProfileScreen(props) {
           {isAboutShown && (
             <>
               <CardInput
-                style={{ marginTop: 10 }}
+                inputStyle={{ marginTop: 10 }}
                 numberOfLines={6}
                 multiline
                 placeholder="Tell something about you..."
@@ -220,138 +202,33 @@ function EditProfileScreen(props) {
           isShown={isExperienceShown}
         >
           {isExperienceShown && (
-            <>
-              <FlatList
-                nestedScrollEnabled
-                contentContainerStyle={{
-                  paddingHorizontal: 15,
-                  // paddingBottom: 20,
-                }}
-                style={{
-                  width: "110%",
-                  height: height / 2,
-                  marginTop: 10,
-                  marginBottom: 10,
-                }}
-                data={dummyData}
-                renderItem={(itemData) => (
-                  <ExperienceCard
-                    disabled
-                    heading={itemData.item.heading}
-                    companyName={itemData.item.companyName}
-                    jobType={itemData.item.jobType}
-                    location={itemData.item.location}
-                    description={itemData.item.description}
-                    postedDate={itemData.item.postedDate}
-                    isApplied={itemData.item.isApplied}
-                    responsibility={itemData.item.responsibility}
-                  />
-                )}
-              />
-              <View style={{ flex: 1, width: "100%" }}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginBottom: 7,
-                  }}
-                >
-                  <TouchableOpacity
-                    activeOpacity={0.4}
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      width: "100%",
-                    }}
-                    onPress={() =>
-                      setIsAddExperienceShown(!isAddExperienceShown)
-                    }
-                  >
-                    <Text
-                      style={{
-                        color: Colors.primary,
-                        fontSize: 15,
-                        fontFamily: "OpenSans-Medium",
-                      }}
-                    >
-                      Add Experience
-                    </Text>
-                    <AntDesign
-                      name={isAddExperienceShown ? "minus" : "plus"}
-                      size={17}
-                      color={Colors.primary}
-                    />
-                  </TouchableOpacity>
-                </View>
-                {isAddExperienceShown && (
-                  <>
-                    <CardInput label="Company" />
-                    <CardInput label="Job Type" />
-                    <CardInput label="Role" />
-                    <View style={{ flexDirection: "row", marginTop: -10 }}>
-                      <DetailsCard
-                        label="From"
-                        iconName="date-range"
-                        onPress={() => {
-                          setOrigin("birthDate");
-                          showDatepicker();
-                        }}
-                        style={{ width: "49%", marginRight: 5 }}
-                      />
-                      <DetailsCard
-                        label="To"
-                        iconName="date-range"
-                        onPress={() => {
-                          setOrigin("birthDate");
-                          showDatepicker();
-                        }}
-                        style={{ width: "49%" }}
-                      />
-                    </View>
-                    <TouchableOpacity
-                      activeOpacity={0.4}
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                      }}
-                    >
-                      <View
-                        style={{
-                          borderWidth: 1,
-                          borderRadius: 3,
-                          borderColor: Colors.primary,
-                          height: 15,
-                          width: 15,
-                          marginRight: 5,
-                        }}
-                      />
-                      <AppText>Present</AppText>
-                    </TouchableOpacity>
-                    <CardInput
-                      label="Responsibility"
-                      // style={{ marginTop: 10 }}
-                      numberOfLines={6}
-                      multiline
-                      placeholder="Tell something about you..."
-                    />
-                    <CustomButton
-                      title="Add"
-                      style={{
-                        width: 75,
-                        alignSelf: "flex-end",
-                        marginVertical: 7,
-                      }}
-                      // onPress={() => {
-                      //   top.value = withSpring(dimensions.height, SPRING_CONFIG);
-                      //   setIsPressed(false);
-                      // }}
-                    />
-                  </>
-                )}
-              </View>
-            </>
+            <FlatList
+              nestedScrollEnabled
+              contentContainerStyle={{
+                paddingHorizontal: 15,
+                // paddingBottom: 20,
+              }}
+              style={{
+                width: "110%",
+                height: height / 2,
+                marginTop: 10,
+                marginBottom: 10,
+              }}
+              data={dummyData}
+              renderItem={(itemData) => (
+                <ExperienceCard
+                  disabled
+                  heading={itemData.item.heading}
+                  companyName={itemData.item.companyName}
+                  jobType={itemData.item.jobType}
+                  location={itemData.item.location}
+                  description={itemData.item.description}
+                  postedDate={itemData.item.postedDate}
+                  isApplied={itemData.item.isApplied}
+                  responsibility={itemData.item.responsibility}
+                />
+              )}
+            />
           )}
         </AppPicker>
         <AppPicker
@@ -371,90 +248,7 @@ function EditProfileScreen(props) {
           title="Academics"
           onPress={() => setIsAcademicsShown(!isAcademicsShown)}
         >
-          {isAcademicsShown && (
-            <>
-              <CardInput
-                label="Institute/College/University"
-                labelStyle={{ marginTop: 10 }}
-              />
-              <DetailsCard
-                label="Degree"
-                title="Select"
-                style={{ marginTop: -10 }}
-              />
-              <View
-                style={{
-                  flexDirection: "row",
-                }}
-              >
-                <CardInput
-                  label="Specialization"
-                  placeholder="If any"
-                  style={{ marginRight: 3 }}
-                />
-                <CardInput
-                  label="Grade"
-                  placeholder="Percentage/CGPA"
-                  style={{ marginLeft: 3 }}
-                />
-              </View>
-              <View style={{ flexDirection: "row", marginTop: -10 }}>
-                <DetailsCard
-                  label="From"
-                  iconName="date-range"
-                  onPress={() => {
-                    setOrigin("birthDate");
-                    showDatepicker();
-                  }}
-                  style={{ width: "49%", marginRight: 5 }}
-                />
-                <DetailsCard
-                  label="To"
-                  iconName="date-range"
-                  onPress={() => {
-                    setOrigin("birthDate");
-                    showDatepicker();
-                  }}
-                  style={{ width: "49%" }}
-                />
-              </View>
-              <TouchableOpacity
-                activeOpacity={0.4}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  alignSelf: "flex-end",
-                  marginBottom: 5,
-                }}
-              >
-                <View
-                  style={{
-                    borderWidth: 1,
-                    borderRadius: 3,
-                    borderColor: Colors.primary,
-                    height: 15,
-                    width: 15,
-                    marginRight: 5,
-                  }}
-                />
-                <AppText>Present</AppText>
-              </TouchableOpacity>
-
-              <CustomButton
-                title="Add"
-                style={{
-                  width: 75,
-                  alignSelf: "flex-end",
-                  marginVertical: 7,
-                }}
-                // onPress={() => {
-                //   top.value = withSpring(dimensions.height, SPRING_CONFIG);
-                //   setIsPressed(false);
-                // }}
-              />
-            </>
-          )}
+          {isAcademicsShown && <></>}
         </AppPicker>
         <AppPicker
           style={{ alignSelf: "center", width: "97%" }}

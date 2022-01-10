@@ -200,7 +200,7 @@ function FilterModalContent(props) {
       {isSkillsShown && (
         <>
           <CardInput
-            style={{ marginHorizontal: 10 }}
+            inputStyle={{ marginHorizontal: 10 }}
             placeholder="Press enter to add"
             onChangeText={(val) => {
               setSkillItemText(val);

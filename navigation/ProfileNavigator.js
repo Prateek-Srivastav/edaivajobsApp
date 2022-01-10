@@ -11,7 +11,7 @@ import JobDetailScreen from "../screens/JobDetailScreen";
 
 import Colors from "../constants/Colors";
 import ProfileScreen from "../screens/ProfileScreen";
-import EditProfileScreen from "../screens/EditProfileScreen";
+import EditProfileScreen from "../screens/EditProfileScreens/EditProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
