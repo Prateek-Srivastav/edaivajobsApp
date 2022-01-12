@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "assignment",
-    "slug": "assignment",
+    "name": "edaivajobsApp",
+    "slug": "edaivajobsApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,9 +13,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -24,7 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.prateeksri.assignment"
+      "package": "com.prateeksri.edaivajobsApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"

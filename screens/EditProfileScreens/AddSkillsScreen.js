@@ -9,7 +9,6 @@ import CustomButton from "../../components/CustomButton";
 
 function AddSkillsScreen(props) {
   const [range, setRange] = useState("0 ");
-  const [sliding, setSliding] = useState("inactive");
 
   return (
     <View style={styles.container}>
@@ -48,8 +47,6 @@ function AddSkillsScreen(props) {
           maximumValue={10}
           value={parseInt(range)}
           onValueChange={(value) => setRange(parseInt(value))}
-          onSlidingStart={() => setSliding("Sliding")}
-          onSlidingComplete={() => setSliding("Inactive")}
         />
       </View>
       <CustomButton title="Add" />

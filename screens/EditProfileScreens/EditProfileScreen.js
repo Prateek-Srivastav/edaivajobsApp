@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
+  TouchableNativeFeedback,
 } from "react-native";
 import AppPicker from "../../components/AppPicker";
 
@@ -62,50 +63,6 @@ function EditProfileScreen(props) {
     }
   };
 
-  const DetailsCard = (props) => {
-    const { label, iconName, title } = props;
-
-    let placeholder;
-
-    if (title) placeholder = title;
-    else placeholder = selectedBirthDate ? selectedBirthDate : "Date";
-
-    return (
-      <View style={{ width: "100%", alignItems: "center", ...props.style }}>
-        <AppText
-          style={{ alignSelf: "flex-start", fontSize: 13, marginTop: 10 }}
-        >
-          {label}
-        </AppText>
-        <AppPicker
-          {...props}
-          icon={
-            iconName ? (
-              <MaterialIcons name={iconName} size={17} color="#817E7E" />
-            ) : null
-          }
-          title={placeholder}
-          style={{ marginBottom: 10 }}
-        />
-      </View>
-    );
-  };
-
-  const DetailsInput = (props) => {
-    const { label, placeholder } = props;
-
-    return (
-      <View style={{ marginTop: 5, width: "100%" }}>
-        {/* {label && (
-          <AppText style={{ alignSelf: "flex-start", fontSize: 13 }}>
-            {label}
-          </AppText>
-        )} */}
-        <CardInput {...props} placeholder={placeholder} />
-      </View>
-    );
-  };
-
   const showMode = (currentMode) => {
     setShow(true);
     setMode(currentMode);
@@ -118,13 +75,46 @@ function EditProfileScreen(props) {
   const showTimepicker = () => {
     showMode("time");
   };
+  const SmallText = (props) => (
+    <Text style={styles.smallText}>{props.children}</Text>
+  );
 
   const NormalText = (props) => (
-    <Text style={styles.jobText}>{props.children}</Text>
+    <Text style={styles.normalText}>{props.children}</Text>
   );
 
   const LargeText = (props) => (
-    <Text style={styles.nameText}>{props.children}</Text>
+    <Text style={styles.largeText}>{props.children}</Text>
+  );
+
+  const DetailHeading = ({ label }) => (
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        // borderWidth: 1,
+        width: "100%",
+      }}
+    >
+      <SmallText>{label}</SmallText>
+
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        {/* <View style={styles.buttonContainer}> */}
+        <TouchableOpacity
+        // onPress={() => {
+        //   top.value = withSpring(dimensions.height + 50, SPRING_CONFIG);
+        //   setIsPressed(false);
+        // }}
+        >
+          <View style={styles.button}>
+            <Feather name="edit-3" size={17} color={Colors.primary} />
+          </View>
+        </TouchableOpacity>
+
+        {/* </View> */}
+      </View>
+    </View>
   );
 
   return (
@@ -152,85 +142,30 @@ function EditProfileScreen(props) {
           </Card>
         </View>
       </View>
-      <ScrollView style={{ paddingHorizontal: 10 }}>
-        <AppPicker
-          onPress={() => setIsDetailShown(!isDetailShown)}
-          style={{ alignSelf: "center", width: "97%" }}
-          titleStyle={{
-            color: Colors.primary,
-            fontSize: 15,
-            fontFamily: "OpenSans-Medium",
-          }}
-          iconColor={Colors.primary}
-          title="Personal Details"
-          isShown={isDetailShown}
-        />
+      <ScrollView style={{}}>
+        <View style={{ marginHorizontal: 15 }}>
+          <DetailHeading label="Personal Details" isNotTrashIcon />
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <AppText>EMAIL:{"  "}</AppText>
+            <AppText style={{ color: Colors.black }}>xyz@gmail.com </AppText>
+          </View>
+        </View>
 
-        <AppPicker
-          onPress={() => setIsAboutShown(!isAboutShown)}
-          style={{ alignSelf: "center", width: "97%" }}
-          titleStyle={{
-            color: Colors.primary,
-            fontSize: 15,
-            fontFamily: "OpenSans-Medium",
-          }}
-          iconColor={Colors.primary}
-          title="About"
-          isShown={isAboutShown}
-        >
-          {isAboutShown && (
-            <>
-              <CardInput
-                inputStyle={{ marginTop: 10 }}
-                numberOfLines={6}
-                multiline
-                placeholder="Tell something about you..."
-              />
-            </>
-          )}
-        </AppPicker>
-        <AppPicker
-          onPress={() => setIsExperienceShown(!isExperienceShown)}
-          style={{ alignSelf: "center", width: "97%" }}
-          titleStyle={{
-            color: Colors.primary,
-            fontSize: 15,
-            fontFamily: "OpenSans-Medium",
-          }}
-          iconColor={Colors.primary}
-          title="Experience"
-          isShown={isExperienceShown}
-        >
-          {isExperienceShown && (
-            <FlatList
-              nestedScrollEnabled
-              contentContainerStyle={{
-                paddingHorizontal: 15,
-                // paddingBottom: 20,
-              }}
-              style={{
-                width: "110%",
-                height: height / 2,
-                marginTop: 10,
-                marginBottom: 10,
-              }}
-              data={dummyData}
-              renderItem={(itemData) => (
-                <ExperienceCard
-                  disabled
-                  heading={itemData.item.heading}
-                  companyName={itemData.item.companyName}
-                  jobType={itemData.item.jobType}
-                  location={itemData.item.location}
-                  description={itemData.item.description}
-                  postedDate={itemData.item.postedDate}
-                  isApplied={itemData.item.isApplied}
-                  responsibility={itemData.item.responsibility}
-                />
-              )}
-            />
-          )}
-        </AppPicker>
+        <View style={{ ...styles.line, marginTop: 15 }} />
+        <View style={{ marginHorizontal: 15 }}>
+          <DetailHeading label="About" />
+          <CardInput
+            // style={{ marginBottom: 10 }}
+            numberOfLines={6}
+            multiline
+            placeholder="Tell something about you..."
+          />
+        </View>
+        <View style={styles.line} />
+
+        <View style={{ marginHorizontal: 15 }}>
+          <DetailHeading label="Academics" />
+        </View>
         <AppPicker
           style={{ alignSelf: "center", width: "97%" }}
           titleStyle={{
@@ -338,6 +273,24 @@ function EditProfileScreen(props) {
 }
 
 const styles = StyleSheet.create({
+  button: {
+    height: 36,
+    width: 36,
+    // borderWidth: 1,
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    right: -7,
+  },
+  buttonContainer: {
+    height: 36,
+    width: 36,
+    // borderWidth: 1,
+    borderRadius: 18,
+    overflow: "hidden",
+    // position: "absolute",
+    // right: 30,
+  },
   container: {
     flex: 1,
     // justifyContent: "center",
@@ -346,12 +299,31 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg,
     // paddingTop: 40,
   },
-  jobText: {
+  line: {
+    // height: 27,
+    // alignSelf: "center",
+    width: "85%",
+    height: 1.6,
+    borderRadius: 10,
+    // marginHorizontal: 5,
+    alignSelf: "center",
+    backgroundColor: Colors.grey,
+    elevation: 1,
+    marginTop: 10,
+    marginBottom: 15,
+    opacity: 0.1,
+  },
+  smallText: {
+    fontFamily: "OpenSans-Medium",
+    fontSize: 15,
+    color: Colors.primary,
+  },
+  normalText: {
     fontFamily: "OpenSans-SemiBold",
     fontSize: 17,
     color: Colors.primary,
   },
-  nameText: {
+  largeText: {
     fontFamily: "OpenSans-Bold",
     fontSize: 22,
     color: Colors.primary,
