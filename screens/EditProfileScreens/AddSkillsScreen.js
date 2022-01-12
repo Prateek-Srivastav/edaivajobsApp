@@ -57,7 +57,7 @@ function AddSkillsScreen(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 70,
+
     padding: 15,
   },
 });

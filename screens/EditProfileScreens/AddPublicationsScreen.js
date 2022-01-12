@@ -38,9 +38,7 @@ function AddPublicationsScreen(props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 70,
-  },
+  container: {},
 });
 
 export default AddPublicationsScreen;

@@ -20,6 +20,7 @@ import {
   MaterialIcons,
   AntDesign,
 } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 import Card from "../../components/Card";
 import CustomButton from "../../components/CustomButton";
@@ -43,6 +44,8 @@ function EditProfileScreen(props) {
   const [show, setShow] = useState(false);
   const [selectedBirthDate, setSelectedBirthDate] = useState();
   const [origin, setOrigin] = useState("");
+
+  const navigation = useNavigation();
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -87,7 +90,7 @@ function EditProfileScreen(props) {
     <Text style={styles.largeText}>{props.children}</Text>
   );
 
-  const DetailHeading = ({ label }) => (
+  const DetailHeading = ({ label, onPress }) => (
     <View
       style={{
         flexDirection: "row",
@@ -101,12 +104,7 @@ function EditProfileScreen(props) {
 
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         {/* <View style={styles.buttonContainer}> */}
-        <TouchableOpacity
-        // onPress={() => {
-        //   top.value = withSpring(dimensions.height + 50, SPRING_CONFIG);
-        //   setIsPressed(false);
-        // }}
-        >
+        <TouchableOpacity onPress={onPress}>
           <View style={styles.button}>
             <Feather name="edit-3" size={17} color={Colors.primary} />
           </View>
@@ -116,6 +114,40 @@ function EditProfileScreen(props) {
       </View>
     </View>
   );
+
+  const AddDetails = (props) => {
+    return (
+      <>
+        <View
+          style={{
+            marginHorizontal: 15,
+            marginBottom: props.isNotLine ? 20 : 0,
+          }}
+        >
+          <SmallText>{props.label}</SmallText>
+          {props.children}
+          <TouchableOpacity
+            onPress={props.onPress}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 10,
+              marginBottom: 5,
+            }}
+          >
+            <AntDesign
+              name="plus"
+              size={17}
+              color={Colors.primary}
+              style={{ marginRight: 10 }}
+            />
+            <NormalText>Add {props.label}</NormalText>
+          </TouchableOpacity>
+        </View>
+        {!props.isNotLine && <View style={styles.line} />}
+      </>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -142,9 +174,16 @@ function EditProfileScreen(props) {
           </Card>
         </View>
       </View>
-      <ScrollView style={{}}>
+      <ScrollView>
         <View style={{ marginHorizontal: 15 }}>
-          <DetailHeading label="Personal Details" isNotTrashIcon />
+          <DetailHeading
+            label="Personal Details"
+            onPress={() =>
+              navigation.navigate("EditProfileDetail", {
+                component: "personal",
+              })
+            }
+          />
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <AppText>EMAIL:{"  "}</AppText>
             <AppText style={{ color: Colors.black }}>xyz@gmail.com </AppText>
@@ -162,101 +201,84 @@ function EditProfileScreen(props) {
           />
         </View>
         <View style={styles.line} />
-
-        <View style={{ marginHorizontal: 15 }}>
-          <DetailHeading label="Academics" />
-        </View>
-        <AppPicker
-          style={{ alignSelf: "center", width: "97%" }}
-          titleStyle={{
-            color: Colors.primary,
-            fontSize: 15,
-            fontFamily: "OpenSans-Medium",
-          }}
-          icon={
-            <AntDesign
-              name={isAcademicsShown ? "minus" : "plus"}
-              size={17}
-              color={Colors.primary}
-            />
+        <AddDetails
+          label="Experience"
+          onPress={() =>
+            navigation.navigate("EditProfileDetail", { component: "exp" })
           }
-          title="Academics"
-          onPress={() => setIsAcademicsShown(!isAcademicsShown)}
         >
-          {isAcademicsShown && <></>}
-        </AppPicker>
-        <AppPicker
-          style={{ alignSelf: "center", width: "97%" }}
-          titleStyle={{
-            color: Colors.primary,
-            fontSize: 15,
-            fontFamily: "OpenSans-Medium",
-          }}
-          icon={<AntDesign name="plus" size={17} color={Colors.primary} />}
-          title="Skills"
-        ></AppPicker>
-        <AppPicker
-          style={{ alignSelf: "center", width: "97%" }}
-          titleStyle={{
-            color: Colors.primary,
-            fontSize: 15,
-            fontFamily: "OpenSans-Medium",
-          }}
-          icon={<AntDesign name="plus" size={17} color={Colors.primary} />}
-          title="Projects"
-        ></AppPicker>
-        <AppPicker
-          style={{ alignSelf: "center", width: "97%" }}
-          titleStyle={{
-            color: Colors.primary,
-            fontSize: 15,
-            fontFamily: "OpenSans-Medium",
-          }}
-          icon={<AntDesign name="plus" size={17} color={Colors.primary} />}
-          title="Certifications"
-        ></AppPicker>
-        <AppPicker
-          style={{ alignSelf: "center", width: "97%" }}
-          titleStyle={{
-            color: Colors.primary,
-            fontSize: 15,
-            fontFamily: "OpenSans-Medium",
-          }}
-          icon={<AntDesign name="plus" size={17} color={Colors.primary} />}
-          title="Publications"
-        ></AppPicker>
-        <AppPicker
-          style={{ alignSelf: "center", width: "97%" }}
-          titleStyle={{
-            color: Colors.primary,
-            fontSize: 15,
-            fontFamily: "OpenSans-Medium",
-          }}
-          icon={<AntDesign name="plus" size={17} color={Colors.primary} />}
-          title="Patents"
-        ></AppPicker>
-        <AppPicker
-          style={{ alignSelf: "center", width: "97%" }}
-          titleStyle={{
-            color: Colors.primary,
-            fontSize: 15,
-            fontFamily: "OpenSans-Medium",
-          }}
-          icon={<AntDesign name="plus" size={17} color={Colors.primary} />}
-          title="Achievements"
-        ></AppPicker>
-        <AppPicker
-          style={{ alignSelf: "center", width: "97%", marginBottom: 30 }}
-          titleStyle={{
-            color: Colors.primary,
-            fontSize: 15,
-            fontFamily: "OpenSans-Medium",
-          }}
-          icon={
-            <Ionicons name="chevron-down" size={17} color={Colors.primary} />
+          <Text>Hello Experience</Text>
+        </AddDetails>
+        <AddDetails
+          label="Academics"
+          onPress={() =>
+            navigation.navigate("EditProfileDetail", { component: "acad" })
           }
-          title="Social Links"
-        ></AppPicker>
+        >
+          {/* <Text>Hello Academics</Text> */}
+        </AddDetails>
+        <AddDetails
+          label="Skills"
+          onPress={() =>
+            navigation.navigate("EditProfileDetail", { component: "skills" })
+          }
+        >
+          {/* <Text>Hello Skills</Text> */}
+        </AddDetails>
+        <AddDetails
+          label="Projects"
+          onPress={() =>
+            navigation.navigate("EditProfileDetail", { component: "projs" })
+          }
+        >
+          {/* <Text>Hello Projects</Text> */}
+        </AddDetails>
+        <AddDetails
+          label="Certifications"
+          onPress={() =>
+            navigation.navigate("EditProfileDetail", { component: "certs" })
+          }
+        >
+          {/* <Text>Hello Certifications</Text> */}
+        </AddDetails>
+        <AddDetails
+          label="Publications"
+          onPress={() =>
+            navigation.navigate("EditProfileDetail", { component: "pubs" })
+          }
+        >
+          {/* <Text>Hello Publications</Text> */}
+        </AddDetails>
+        <AddDetails
+          label="Patents"
+          onPress={() =>
+            navigation.navigate("EditProfileDetail", { component: "patents" })
+          }
+        >
+          {/* <Text>Hello Patents</Text> */}
+        </AddDetails>
+        <AddDetails
+          label="Achievements"
+          onPress={() =>
+            navigation.navigate("EditProfileDetail", {
+              component: "achievements",
+            })
+          }
+        >
+          {/* <Text>Hello Achievements</Text> */}
+        </AddDetails>
+        <AddDetails
+          isNotLine
+          label="Social Links"
+          onPress={() =>
+            navigation.navigate("EditProfileDetail", {
+              component: "socialLinks",
+            })
+          }
+        >
+          {/* <Text>Hello Social Links</Text> */}
+        </AddDetails>
+
         {show && (
           <DateTimePicker
             testID="dateTimePicker"
@@ -280,7 +302,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     justifyContent: "center",
     alignItems: "center",
-    right: -7,
+    right: -9,
   },
   buttonContainer: {
     height: 36,
@@ -310,12 +332,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grey,
     elevation: 1,
     marginTop: 10,
-    marginBottom: 15,
+    marginBottom: 20,
     opacity: 0.1,
   },
   smallText: {
     fontFamily: "OpenSans-Medium",
-    fontSize: 15,
+    fontSize: 15.5,
     color: Colors.primary,
   },
   normalText: {

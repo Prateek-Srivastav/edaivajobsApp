@@ -7,7 +7,7 @@ import AppPicker from "../../components/AppPicker";
 import CardInput from "../../components/CardInput";
 import CustomButton from "../../components/CustomButton";
 
-function AddCertificatesScreen(props) {
+function AddCertificationsScreen(props) {
   return (
     <View style={styles.container}>
       <CardInput label="Title" placeholder="xyz" />
@@ -47,8 +47,7 @@ function AddCertificatesScreen(props) {
 const styles = StyleSheet.create({
   container: {
     padding: 15,
-    paddingTop: 70,
   },
 });
 
-export default AddCertificatesScreen;
+export default AddCertificationsScreen;

@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
     // flex: 1,
     // padding: 15,
     // alignItems: "center",
-    paddingTop: 70,
   },
 });
 

@@ -6,9 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
-import HomeScreen from "../screens/HomeScreen";
-import JobDetailScreen from "../screens/JobDetailScreen";
-
+import EditProfileDetailScreen from "../screens/EditProfileScreens/EditProfileDetailScreen";
 import Colors from "../constants/Colors";
 import ProfileScreen from "../screens/ProfileScreen";
 import EditProfileScreen from "../screens/EditProfileScreens/EditProfileScreen";
@@ -122,6 +120,24 @@ const ProfileNavigator = () => (
             }}
           >
             Edit Profile
+          </Text>
+        ),
+      }}
+    />
+    <Stack.Screen
+      name="EditProfileDetail"
+      component={EditProfileDetailScreen}
+      options={{
+        // headerRight: () => rightshareHeader(),
+        headerTitle: () => (
+          <Text
+            style={{
+              fontFamily: "OpenSans-SemiBold",
+              color: Colors.primary,
+              fontSize: 20,
+            }}
+          >
+            Edit Profile Details
           </Text>
         ),
       }}

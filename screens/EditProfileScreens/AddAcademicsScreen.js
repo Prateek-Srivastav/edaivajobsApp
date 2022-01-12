@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import AppPicker from "../../components/AppPicker";
 import AppText from "../../components/AppText";
@@ -94,7 +95,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    paddingTop: 70,
   },
 });
 
