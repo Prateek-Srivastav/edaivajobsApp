@@ -38,7 +38,10 @@ function HomeScreen({ navigation }) {
             marginVertical: 20,
           }}
         >
-          <TouchableOpacity style={styles.dpContainer}>
+          <TouchableOpacity
+            style={styles.dpContainer}
+            onPress={navigation.openDrawer}
+          >
             <Image
               source={require("../assets/dummyDP.png")}
               style={{ height: 35, width: 35 }}

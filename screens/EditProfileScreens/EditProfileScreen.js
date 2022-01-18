@@ -10,16 +10,8 @@ import {
   Dimensions,
   TouchableNativeFeedback,
 } from "react-native";
-import AppPicker from "../../components/AppPicker";
-
 import DateTimePicker from "@react-native-community/datetimepicker";
-
-import {
-  Ionicons,
-  Feather,
-  MaterialIcons,
-  AntDesign,
-} from "@expo/vector-icons";
+import { Feather, AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 import Card from "../../components/Card";
@@ -33,12 +25,6 @@ import dummyData from "../../dummyData.js/data";
 const { width, height } = Dimensions.get("window");
 
 function EditProfileScreen(props) {
-  const [isDetailShown, setIsDetailShown] = useState(false);
-  const [isAboutShown, setIsAboutShown] = useState(false);
-  const [isExperienceShown, setIsExperienceShown] = useState(false);
-  const [isAddExperienceShown, setIsAddExperienceShown] = useState(false);
-  const [isAcademicsShown, setIsAcademicsShown] = useState(false);
-
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);

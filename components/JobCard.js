@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesome, Octicons, Ionicons } from "@expo/vector-icons";
 
 import Colors from "../constants/Colors";
+import { BuildingIcon, Location } from "../assets/svg/icons";
 
 function JobCard(props) {
   return (
@@ -59,31 +60,16 @@ function JobCard(props) {
           flexDirection: "row",
           alignItems: "center",
           marginVertical: 7,
-          paddingStart: 3,
         }}
       >
-        <FontAwesome
-          name="building"
-          size={15}
-          color="#8C8C8C"
-          style={{
-            marginLeft: -1.6,
-            marginRight: 5,
-          }}
-        />
-        <Text style={styles.text}>{props.companyName}</Text>
+        <BuildingIcon />
+        <Text style={{ ...styles.text, marginStart: 3 }}>
+          {props.companyName}
+        </Text>
       </View>
       <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
-        <Ionicons
-          name="location-sharp"
-          size={19}
-          color="#8C8C8C"
-          style={{
-            marginLeft: -2.5,
-            marginRight: 3,
-          }}
-        />
-        <Text style={styles.text}>{props.location}</Text>
+        <Location />
+        <Text style={{ ...styles.text, marginStart: 3 }}>{props.location}</Text>
       </View>
     </TouchableOpacity>
   );

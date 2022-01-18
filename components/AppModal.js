@@ -18,6 +18,7 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  runOnJS,
 } from "react-native-reanimated";
 
 import { Feather, AntDesign } from "@expo/vector-icons";
@@ -46,6 +47,10 @@ function AppModal(props) {
     };
   });
 
+  function setIsPressed() {
+    props.sendData(false);
+  }
+
   const gestureHandler = useAnimatedGestureHandler({
     onStart(_, context) {
       context.startTop = top.value;
@@ -53,14 +58,15 @@ function AppModal(props) {
     onActive(event, context) {
       top.value = context.startTop + event.translationY;
     },
-    // onEnd() {
-    //   if(top.value?dime)
-    // }
+    onEnd(event) {
+      if (event.translationY > 50)
+        top.value = withSpring(dimensions.height + 50, SPRING_CONFIG);
+      else {
+        top.value = withSpring(0, SPRING_CONFIG);
+      }
+      runOnJS(setIsPressed)();
+    },
   });
-
-  const setIsPressed = (value) => {
-    props.sendData(value);
-  };
 
   if (props.isPressed) {
     top.value = withSpring(0, SPRING_CONFIG);
@@ -76,7 +82,7 @@ function AppModal(props) {
               <TouchableNativeFeedback
                 onPress={() => {
                   top.value = withSpring(dimensions.height + 50, SPRING_CONFIG);
-                  setIsPressed(false);
+                  setIsPressed();
                 }}
               >
                 <View style={styles.button}>
@@ -102,7 +108,9 @@ function AppModal(props) {
           >
             {props.isReset && (
               <CustomButton
-                title="Reset"
+                title={
+                  props.firstButtonTitle ? props.firstButtonTitle : "Reset"
+                }
                 titleStyle={{ color: Colors.primary }}
                 style={{
                   backgroundColor: "white",
@@ -112,16 +120,18 @@ function AppModal(props) {
                 }}
                 onPress={() => {
                   top.value = withSpring(dimensions.height, SPRING_CONFIG);
-                  setIsPressed(false);
+                  setIsPressed();
                 }}
               />
             )}
             <CustomButton
-              title="Apply"
+              title={
+                props.secondButtonTitle ? props.secondButtonTitle : "Apply"
+              }
               style={{ width: `${100 / props.numOfButton}%` }}
               onPress={() => {
                 top.value = withSpring(dimensions.height, SPRING_CONFIG);
-                setIsPressed(false);
+                setIsPressed();
               }}
             />
           </View>

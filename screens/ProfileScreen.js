@@ -18,11 +18,11 @@ function ProfileScreen({ navigation }) {
   const ICON_COLOR = Colors.primary;
 
   const NormalText = (props) => (
-    <Text style={styles.jobText}>{props.children}</Text>
+    <Text style={styles.normalText}>{props.children}</Text>
   );
 
   const LargeText = (props) => (
-    <Text style={styles.nameText}>{props.children}</Text>
+    <Text style={styles.largeText}>{props.children}</Text>
   );
 
   return (
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     // padding: -10,
     // position: "absolute",
   },
-  jobText: {
+  normalText: {
     fontFamily: "OpenSans-SemiBold",
     fontSize: 17,
     color: Colors.primary,
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     opacity: 0.5,
   },
-  nameText: {
+  largeText: {
     fontFamily: "OpenSans-Bold",
     fontSize: 22,
     color: Colors.primary,

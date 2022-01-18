@@ -13,6 +13,9 @@ import HomeScreen from "./screens/HomeScreen";
 import JobsNavigator from "./navigation/JobsNavigator";
 import ProfileScreen from "./screens/ProfileScreen";
 import ProfileNavigator from "./navigation/ProfileNavigator";
+import TabNavigator from "./navigation/TabNavigator";
+import AppNavigator from "./navigation/AppNavigator";
+import ApplicationStatusScreen from "./screens/ApplicationStatusScreen";
 
 enableScreens();
 
@@ -22,6 +25,7 @@ const fetchFonts = () => {
     "OpenSans-Regular": require("./assets/fonts/OpenSans-Regular.ttf"),
     "OpenSans-SemiBold": require("./assets/fonts/OpenSans-SemiBold.ttf"),
     "OpenSans-Bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+    "OpenSans-Italic": require("./assets/fonts/OpenSans-Italic.ttf"),
   });
 };
 
@@ -40,7 +44,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <ProfileNavigator />
+      <AuthNavigator />
     </NavigationContainer>
   );
 }

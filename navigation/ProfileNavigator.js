@@ -5,6 +5,7 @@ import { TransitionPresets } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 import EditProfileDetailScreen from "../screens/EditProfileScreens/EditProfileDetailScreen";
 import Colors from "../constants/Colors";
@@ -14,13 +15,12 @@ import EditProfileScreen from "../screens/EditProfileScreens/EditProfileScreen";
 const Stack = createNativeStackNavigator();
 
 const leftHeader = () => {
+  // const routeName = getFocusedRouteNameFromRoute(route) ?? "Feed";
+
   const navigation = useNavigation();
   let isBackShown = true;
-  if (
-    navigation.getRootState() === undefined ||
-    navigation.getRootState().routes.length === 1
-  )
-    isBackShown = false;
+  // if (routeName === "Profile") isBackShown = false;
+
   return (
     <View
       style={{

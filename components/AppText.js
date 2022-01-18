@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from "react-native";
 
 function AppText(props) {
   return (
-    <Text style={{ ...styles.defaultText, ...props.style }}>
+    <Text {...props} style={{ ...styles.defaultText, ...props.style }}>
       {props.children}
     </Text>
   );

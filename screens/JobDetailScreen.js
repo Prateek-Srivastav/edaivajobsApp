@@ -21,6 +21,7 @@ import Colors from "../constants/Colors";
 import CustomButton from "../components/CustomButton";
 
 import ApplicationModalContent from "../components/ApplicationModalContent";
+import { BuildingIcon, Location } from "../assets/svg/icons";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -38,15 +39,8 @@ function JobDetailScreen({ route }) {
   };
 
   const animStyles = {
-    // position: "absolute",
     top: 0,
-    // left: 0,
-
-    // right: -width / 8,
-    // left: width / 10,
     borderRadius: 20,
-    // elevation: 35,
-    // bottom: 45,
     height: 3,
     width: width / 6,
     backgroundColor: Colors.primary,
@@ -116,30 +110,13 @@ function JobDetailScreen({ route }) {
                 flexDirection: "row",
                 alignItems: "center",
                 marginVertical: 7,
-                paddingStart: 3,
               }}
             >
-              <FontAwesome
-                name="building"
-                size={15}
-                color="#BDEEFF"
-                style={{
-                  marginLeft: -1.6,
-                  marginRight: 5,
-                }}
-              />
+              <BuildingIcon color="#BDEEFF" />
               <Text style={styles.text}>{item.companyName}</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Ionicons
-                name="location-sharp"
-                size={19}
-                color="#BDEEFF"
-                style={{
-                  marginLeft: -2.5,
-                  marginRight: 3,
-                }}
-              />
+              <Location color="#BDEEFF" />
               <Text style={styles.text}>{item.location}</Text>
             </View>
             <Card
@@ -357,6 +334,7 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans-Medium",
     color: Colors.primary,
     fontSize: 15.5,
+    marginStart: 3,
   },
 });
 

@@ -16,7 +16,7 @@ import Colors from "../constants/Colors";
 const EMAIL = "test@test.com";
 const PASSWORD = "test1234";
 
-function LoginScreen(props) {
+function LoginScreen({ navigation }) {
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -105,6 +105,7 @@ function LoginScreen(props) {
             justifyContent: "flex-end",
             flexDirection: "row",
           }}
+          onPress={() => navigation.navigate("ForgotPasswordStack")}
         >
           <Text style={styles.forgotPassText}>Forgot Password?</Text>
         </TouchableOpacity>

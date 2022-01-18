@@ -26,6 +26,7 @@ Job Supplements
 Job Schedule
 
     Monday to Friday `,
+    applicationStatus: "hired",
   },
   {
     id: 2,
@@ -54,6 +55,7 @@ Job Supplements
 Job Schedule
 
     Monday to Friday `,
+    applicationStatus: "applied",
   },
   {
     id: 3,
@@ -82,6 +84,7 @@ Job Supplements
 Job Schedule
 
     Monday to Friday `,
+    applicationStatus: "applied",
   },
   {
     id: 4,
@@ -110,6 +113,7 @@ Job Supplements
 Job Schedule
 
     Monday to Friday `,
+    applicationStatus: "underReview",
   },
   {
     id: 5,
@@ -138,6 +142,7 @@ Job Supplements
 Job Schedule
 
     Monday to Friday `,
+    applicationStatus: "interviewing",
   },
   {
     id: 6,
@@ -166,5 +171,6 @@ Job Supplements
 Job Schedule
 
     Monday to Friday `,
+    applicationStatus: "rejected",
   },
 ];
