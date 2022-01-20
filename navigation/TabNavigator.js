@@ -23,7 +23,7 @@ const Tab = createBottomTabNavigator();
 function MainNavigator({ route }) {
   const [isTabBarVisible, setIsTabBarVisible] = useState(true);
 
-  const { width, height } = Dimensions.get("screen");
+  const { width, height } = Dimensions.get("window");
   const [position] = useState(new Animated.ValueXY());
 
   const animStyles = {
@@ -60,7 +60,7 @@ function MainNavigator({ route }) {
   };
 
   return (
-    <View style={{ width, height, backgroundColor: "white" }}>
+    <View style={{ width, flex: 1, backgroundColor: "white" }}>
       {/* {isTabBarVisible && <Animated.View style={animStyles} />} */}
       <Tab.Navigator
         initialRouteName="Jobs"
@@ -74,7 +74,7 @@ function MainNavigator({ route }) {
               icon = focused ? <HomeFilled /> : <HomeOutline />;
             else if (route.name === "Notifications")
               icon = focused ? <BellFilled /> : <BellOutline />;
-            else if (route.name === "Applications") {
+            else if (route.name === "ApplicationNavigator") {
               icon = focused ? <BagFilled /> : <BagOutline />;
             }
             return icon;
@@ -103,7 +103,7 @@ function MainNavigator({ route }) {
         })}
       >
         <Tab.Screen
-          name="Applications"
+          name="ApplicationNavigator"
           component={ApplicationNavigator}
           options={({ route }) => ({
             headerShown: false,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -15,24 +15,37 @@ import {
 } from "@expo/vector-icons";
 
 import AppModal from "../components/AppModal";
+import ApplicationModalContent from "../components/ApplicationModalContent";
+import { BuildingIcon, Location } from "../assets/svg/icons";
 import AppText from "../components/AppText";
 import Card from "../components/Card";
 import Colors from "../constants/Colors";
 import CustomButton from "../components/CustomButton";
-
-import ApplicationModalContent from "../components/ApplicationModalContent";
-import { BuildingIcon, Location } from "../assets/svg/icons";
+import jobsApi from "../api/jobs";
+import useApi from "../hooks/useApi";
 
 const { width, height } = Dimensions.get("screen");
 
 function JobDetailScreen({ route }) {
   const [showDetail, setShowDetail] = useState(1);
   const [isPressed, setIsPressed] = useState(false);
-
-  // const { width } = Dimensions.get("screen");
   const [position] = useState(new Animated.ValueXY());
 
-  const item = route.params.itemData.item;
+  const jobId = route.params.jobId;
+
+  const {
+    data: jobDetails,
+    error,
+    networkError,
+    loading,
+    request: loadJobDetails,
+  } = useApi(jobsApi.getJobDetails);
+
+  useEffect(() => {
+    loadJobDetails(jobId);
+  }, []);
+
+  // const { width } = Dimensions.get("screen");
 
   const getData = (val) => {
     setIsPressed(false);
@@ -58,13 +71,13 @@ function JobDetailScreen({ route }) {
 
     let detail;
     if (show === 1) {
-      detail = item.description;
+      detail = jobDetails.job_description;
       animate(width / 20);
     } else if (show === 2) {
-      detail = item.responsibility;
+      detail = jobDetails.responsibility;
       animate(width / 2.4);
     } else if (show === 3) {
-      detail = item.more;
+      detail = jobDetails.more;
       animate(width / 1.44);
     }
 
@@ -90,7 +103,11 @@ function JobDetailScreen({ route }) {
     );
   };
 
-  return (
+  return loading ? (
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color={Colors.primary} />
+    </View>
+  ) : (
     <View style={{ flex: 1, width: width, height: height }}>
       <View style={styles.container}>
         <View
@@ -103,7 +120,7 @@ function JobDetailScreen({ route }) {
           }}
         >
           <Card style={styles.card}>
-            <Text style={styles.heading}>{item.heading}</Text>
+            <Text style={styles.heading}>{jobDetails.heading}</Text>
 
             <View
               style={{
@@ -113,11 +130,11 @@ function JobDetailScreen({ route }) {
               }}
             >
               <BuildingIcon color="#BDEEFF" />
-              <Text style={styles.text}>{item.companyName}</Text>
+              <Text style={styles.text}>{jobDetails.companyName}</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Location color="#BDEEFF" />
-              <Text style={styles.text}>{item.location}</Text>
+              <Text style={styles.text}>{jobDetails.location}</Text>
             </View>
             <Card
               style={{
@@ -130,11 +147,11 @@ function JobDetailScreen({ route }) {
             >
               <View style={styles.cardBlue}>
                 <AppText style={{ color: Colors.primary }}>
-                  {item.jobType}
+                  {jobDetails.jobType}
                 </AppText>
               </View>
 
-              {!item.isApplied && (
+              {!jobDetails.isApplied && (
                 <View
                   style={{
                     justifyContent: "center",
@@ -155,7 +172,7 @@ function JobDetailScreen({ route }) {
                       color: Colors.primary,
                     }}
                   >
-                    {item.lastApplicationDate}
+                    {jobDetails.lastApplicationDate}
                   </AppText>
                 </View>
               )}
@@ -242,6 +259,7 @@ function JobDetailScreen({ route }) {
             justifyContent: "space-evenly",
             alignItems: "center",
             marginVertical: -10,
+            paddingHorizontal: 15,
           }}
         >
           <TouchableOpacity
@@ -255,6 +273,7 @@ function JobDetailScreen({ route }) {
               borderRadius: 3,
               backgroundColor: "white",
               padding: 4,
+              marginRight: 10,
             }}
           >
             <MaterialCommunityIcons
@@ -264,12 +283,12 @@ function JobDetailScreen({ route }) {
             />
           </TouchableOpacity>
           <CustomButton
-            disabled={item.isApplied}
+            disabled={jobDetails.isApplied}
             onPress={() => {
               setIsPressed(true);
             }}
-            title={item.isApplied ? "Applied" : "Apply"}
-            style={{ width: "72%" }}
+            title={jobDetails.isApplied ? "Applied" : "Apply"}
+            // style={{ width: "72%" }}
           />
         </View>
       </View>
@@ -280,7 +299,7 @@ function JobDetailScreen({ route }) {
         isPressed={isPressed}
         sendData={getData}
       >
-        <ApplicationModalContent data={item} />
+        <ApplicationModalContent data={jobDetails} />
       </AppModal>
     </View>
   );
@@ -323,6 +342,12 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans-Bold",
     fontSize: 25,
     color: Colors.primary,
+  },
+  loading: {
+    flex: 1,
+    backgroundColor: Colors.bg,
+    justifyContent: "center",
+    alignItems: "center",
   },
   requirementText: {
     fontFamily: "OpenSans-Medium",

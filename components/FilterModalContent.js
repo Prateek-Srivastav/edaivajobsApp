@@ -102,18 +102,20 @@ function FilterModalContent(props) {
           <View
             style={{
               flexDirection: "row",
-              width: "48.5%",
+              width: "100%",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "space-between",
             }}
           >
             <AppPicker
               icon={<Ionicons name="chevron-down" size={17} color="#817E7E" />}
               title="All States"
+              style={{ width: "49%" }}
             />
             <AppPicker
               icon={<Ionicons name="chevron-down" size={17} color="#817E7E" />}
               title="City"
+              style={{ width: "49%" }}
             />
           </View>
         </View>

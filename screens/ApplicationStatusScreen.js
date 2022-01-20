@@ -62,179 +62,179 @@ function ApplicationStatusScreen({ route }) {
   };
 
   const InterviewDetail = () => {
-    // if (item.applicationStatus === "interviewing") {
-    //   return (
-    //     <View
-    //       style={{
-    //         paddingHorizontal: 15,
-    //         width,
-    //         // flex: 1,
-    //       }}
-    //     >
-    //       <AppText>
-    //         Your application has reviewed, scheduled interviews will be visible
-    //         soon.
-    //       </AppText>
-    //     </View>
-    //   );
-    // }
-
-    return (
-      <View style={{ flex: 1, paddingHorizontal: 15, width }}>
-        <View style={{ flexDirection: "row" }}>
-          <View
-            style={{
-              // left: -2,
-              borderWidth: 1,
-              borderColor: Colors.primary,
-              borderRadius: 4,
-              // overflow: "hidden",
-              backgroundColor: "#FFFFFF",
-              padding: 15,
-              paddingRight: 5,
-              width: "80%",
-            }}
-          >
-            <AppText
-              style={{
-                fontSize: 16,
-                color: Colors.primary,
-                fontFamily: "OpenSans-Medium",
-                marginBottom: 5,
-              }}
-            >
-              Round 1
-            </AppText>
-            <AppText>Interview is scheduled virtually on</AppText>
-            <View style={{ flexDirection: "row" }}>
-              <AppText
-                style={{
-                  fontSize: 15,
-                  color: Colors.primary,
-                  fontFamily: "OpenSans-Medium",
-                  marginBottom: 5,
-                }}
-              >
-                Oct 12, 2021 from 1:00 PM to 2:00 PM
-              </AppText>
-            </View>
-            <AppText style={{ marginTop: 10 }}>
-              Not available at the moment?
-            </AppText>
-            <TouchableOpacity
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-              onPress={() => {
-                setIsPressed(true);
-              }}
-            >
-              <Feather name="repeat" size={13} color={Colors.primary} />
-              <AppText
-                style={{
-                  color: Colors.primary,
-                  fontFamily: "OpenSans-Italic",
-                  marginLeft: 5,
-                  textDecorationLine: "underline",
-                  fontSize: 15,
-                }}
-              >
-                Reschedule
-              </AppText>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              backgroundColor: Colors.primary,
-              width: "20%",
-              borderRadius: 4,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Share color="white" />
-            <AppText
-              textAlign="center"
-              style={{ color: "white", marginTop: 8 }}
-            >
-              Meeting
-            </AppText>
-            <AppText textAlign="center" style={{ color: "white" }}>
-              Link
-            </AppText>
-          </View>
-        </View>
-        <View style={styles.line} />
+    if (item.applicationStatus === "interviewing") {
+      return (
         <View
           style={{
-            flexDirection: "row",
-            // width,
-
-            justifyContent: "center",
-            // borderWidth: 1,
+            paddingHorizontal: 15,
+            width,
             // flex: 1,
           }}
         >
-          <View
-            style={{
-              right: -3,
-              borderWidth: 1,
-              borderRadius: 4,
-              borderColor: "#33A000",
-              width: "15%",
-              // overflow: "hidden",
-              backgroundColor: "rgba(51, 160, 0, 0.15)",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Feather
-              name="check"
-              size={20}
-              color="#33A000"
-              // style={{ marginRight: 5 }}
-            />
-          </View>
-          <View
-            style={{
-              left: -2,
-              borderWidth: 1,
-              borderColor: Colors.primary,
-              borderRadius: 4,
-              // overflow: "hidden",
-              backgroundColor: "#FFFFFF",
-              padding: 15,
-              width: "87%",
-            }}
-          >
-            <AppText
-              style={{
-                fontSize: 16,
-                color: Colors.primary,
-                fontFamily: "OpenSans-Medium",
-                marginBottom: 5,
-              }}
-            >
-              Round 1
-            </AppText>
-            <AppText>Interview was scheduled virtually on</AppText>
-            <View style={{ flexDirection: "row" }}>
-              <AppText
-                style={{
-                  fontSize: 15,
-                  color: Colors.primary,
-                  fontFamily: "OpenSans-Medium",
-                  marginBottom: 5,
-                }}
-              >
-                Oct 12, 2021 from 1:00 PM to 2:00 PM
-              </AppText>
-            </View>
-          </View>
+          <AppText>
+            Your application has reviewed, scheduled interviews will be visible
+            soon.
+          </AppText>
         </View>
-      </View>
-    );
+      );
+    }
+    return <View></View>;
+    // return (
+    //   <View style={{ flex: 1, paddingHorizontal: 15, width }}>
+    //     <View style={{ flexDirection: "row" }}>
+    //       <View
+    //         style={{
+    //           // left: -2,
+    //           borderWidth: 1,
+    //           borderColor: Colors.primary,
+    //           borderRadius: 4,
+    //           // overflow: "hidden",
+    //           backgroundColor: "#FFFFFF",
+    //           padding: 15,
+    //           paddingRight: 5,
+    //           width: "80%",
+    //         }}
+    //       >
+    //         <AppText
+    //           style={{
+    //             fontSize: 16,
+    //             color: Colors.primary,
+    //             fontFamily: "OpenSans-Medium",
+    //             marginBottom: 5,
+    //           }}
+    //         >
+    //           Round 1
+    //         </AppText>
+    //         <AppText>Interview is scheduled virtually on</AppText>
+    //         <View style={{ flexDirection: "row" }}>
+    //           <AppText
+    //             style={{
+    //               fontSize: 15,
+    //               color: Colors.primary,
+    //               fontFamily: "OpenSans-Medium",
+    //               marginBottom: 5,
+    //             }}
+    //           >
+    //             Oct 12, 2021 from 1:00 PM to 2:00 PM
+    //           </AppText>
+    //         </View>
+    //         <AppText style={{ marginTop: 10 }}>
+    //           Not available at the moment?
+    //         </AppText>
+    //         <TouchableOpacity
+    //           style={{
+    //             flexDirection: "row",
+    //             alignItems: "center",
+    //           }}
+    //           onPress={() => {
+    //             setIsPressed(true);
+    //           }}
+    //         >
+    //           <Feather name="repeat" size={13} color={Colors.primary} />
+    //           <AppText
+    //             style={{
+    //               color: Colors.primary,
+    //               fontFamily: "OpenSans-Italic",
+    //               marginLeft: 5,
+    //               textDecorationLine: "underline",
+    //               fontSize: 15,
+    //             }}
+    //           >
+    //             Reschedule
+    //           </AppText>
+    //         </TouchableOpacity>
+    //       </View>
+    //       <View
+    //         style={{
+    //           backgroundColor: Colors.primary,
+    //           width: "20%",
+    //           borderRadius: 4,
+    //           justifyContent: "center",
+    //           alignItems: "center",
+    //         }}
+    //       >
+    //         <Share color="white" />
+    //         <AppText
+    //           textAlign="center"
+    //           style={{ color: "white", marginTop: 8 }}
+    //         >
+    //           Meeting
+    //         </AppText>
+    //         <AppText textAlign="center" style={{ color: "white" }}>
+    //           Link
+    //         </AppText>
+    //       </View>
+    //     </View>
+    //     <View style={styles.line} />
+    //     <View
+    //       style={{
+    //         flexDirection: "row",
+    //         // width,
+
+    //         justifyContent: "center",
+    //         // borderWidth: 1,
+    //         // flex: 1,
+    //       }}
+    //     >
+    //       <View
+    //         style={{
+    //           right: -3,
+    //           borderWidth: 1,
+    //           borderRadius: 4,
+    //           borderColor: "#33A000",
+    //           width: "15%",
+    //           // overflow: "hidden",
+    //           backgroundColor: "rgba(51, 160, 0, 0.15)",
+    //           justifyContent: "center",
+    //           alignItems: "center",
+    //         }}
+    //       >
+    //         <Feather
+    //           name="check"
+    //           size={20}
+    //           color="#33A000"
+    //           // style={{ marginRight: 5 }}
+    //         />
+    //       </View>
+    //       <View
+    //         style={{
+    //           left: -2,
+    //           borderWidth: 1,
+    //           borderColor: Colors.primary,
+    //           borderRadius: 4,
+    //           // overflow: "hidden",
+    //           backgroundColor: "#FFFFFF",
+    //           padding: 15,
+    //           width: "87%",
+    //         }}
+    //       >
+    //         <AppText
+    //           style={{
+    //             fontSize: 16,
+    //             color: Colors.primary,
+    //             fontFamily: "OpenSans-Medium",
+    //             marginBottom: 5,
+    //           }}
+    //         >
+    //           Round 1
+    //         </AppText>
+    //         <AppText>Interview was scheduled virtually on</AppText>
+    //         <View style={{ flexDirection: "row" }}>
+    //           <AppText
+    //             style={{
+    //               fontSize: 15,
+    //               color: Colors.primary,
+    //               fontFamily: "OpenSans-Medium",
+    //               marginBottom: 5,
+    //             }}
+    //           >
+    //             Oct 12, 2021 from 1:00 PM to 2:00 PM
+    //           </AppText>
+    //         </View>
+    //       </View>
+    //     </View>
+    //   </View>
+    // );
   };
 
   const Description = ({ show }) => {

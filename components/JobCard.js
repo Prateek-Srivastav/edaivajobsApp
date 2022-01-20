@@ -25,8 +25,8 @@ function JobCard(props) {
             {props.jobType}
           </Text>
         </View>
-        {props.isApplied && <View style={styles.line} />}
-        {props.isApplied && (
+        {props.isApplied.length !== 0 && <View style={styles.line} />}
+        {props.isApplied.length !== 0 && (
           <View style={styles.lightBackground}>
             <Octicons
               name="check"

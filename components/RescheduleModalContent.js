@@ -155,6 +155,7 @@ function RescheduleModalContent(props) {
 
   return (
     <View style={styles.container}>
+      <RescheduleTiming />
       {show && (
         <DateTimePicker
           testID="dateTimePicker"

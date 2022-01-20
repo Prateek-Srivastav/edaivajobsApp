@@ -23,6 +23,7 @@ function CustomButton(props) {
 const styles = StyleSheet.create({
   button: {
     width: "100%",
+    flex: 1,
     height: 40,
     alignItems: "center",
     justifyContent: "center",

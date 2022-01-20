@@ -193,7 +193,7 @@ function EditProfileScreen(props) {
             navigation.navigate("EditProfileDetail", { component: "exp" })
           }
         >
-          <Text>Hello Experience</Text>
+          {/* <Text>Hello Experience</Text> */}
         </AddDetails>
         <AddDetails
           label="Academics"

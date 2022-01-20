@@ -44,7 +44,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <AuthNavigator />
+      <AppNavigator />
     </NavigationContainer>
   );
 }
