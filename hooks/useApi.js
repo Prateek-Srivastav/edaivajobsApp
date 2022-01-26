@@ -12,11 +12,12 @@ function useApi(apiFunc) {
     if (!response.ok) {
       setLoading(false);
 
+      console.log(response);
       if (response.problem === "NETWORK_ERROR") return setNetworkError(true);
       else return setError(true);
     }
-    if (networkError) setNetworkError(false);
-    if (error) setError(false);
+    setNetworkError(false);
+    setError(false);
 
     setData(response.data);
     setLoading(false);

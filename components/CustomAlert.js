@@ -25,7 +25,8 @@ const CustomAlert = ({ visible, children }) => {
         useNativeDriver: true,
       }).start();
     } else {
-      setTimeout(() => setShowModal(false), 2000);
+      setTimeout(() => setShowModal(false), 200);
+      // setShowModal(false);
       Animated.timing(scaleValue, {
         toValue: 0,
         duration: 300,

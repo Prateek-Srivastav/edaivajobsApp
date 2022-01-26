@@ -1,20 +1,20 @@
 import React, { useState, useCallback } from "react";
 import { View, StyleSheet, ScrollView, Text } from "react-native";
 
+import { AppForm, AppFormField, SubmitButton } from "../../components/forms";
 import AppText from "../../components/AppText";
 import Colors from "../../constants/Colors";
 import CustomButton from "../../components/CustomButton";
 import Input from "../../components/Input";
 import { Lock } from "../../assets/svg/icons";
+import * as Yup from "yup";
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required().email().label("Email"),
+});
 
 function MainScreen({ navigation }) {
   const [email, setEmail] = useState();
-  const [buttonDisabled, setbuttonDisabled] = useState(true);
-
-  const inputEmailHandler = useCallback((inputValue, inputValidity) => {
-    setbuttonDisabled(!inputValidity);
-    setEmail(inputValue);
-  }, []);
 
   return (
     <ScrollView
@@ -28,15 +28,11 @@ function MainScreen({ navigation }) {
       <AppText style={{ color: Colors.black, marginTop: 15, marginBottom: 40 }}>
         Provide your account’s email for which you want to reset your password
       </AppText>
-      <Input
-        id="email"
+      {/* <Input
         placeholder="Email"
         keyboardType="email-address"
-        required
-        email
         autoCapitalize="none"
-        errorText="Please enter a valid email address."
-        onInputChange={inputEmailHandler}
+        onTextChange={inputEmailHandler}
       />
       <CustomButton
         title="Next"
@@ -46,7 +42,24 @@ function MainScreen({ navigation }) {
         }}
         onPress={() => navigation.navigate("PasswordResetMethod", { email })}
         disabled={buttonDisabled}
-      />
+      /> */}
+
+      <AppForm
+        initialValues={{ email: "", password: "" }}
+        onSubmit={({ email }) =>
+          navigation.navigate("PasswordResetMethod", { email })
+        }
+        validationSchema={validationSchema}
+      >
+        <AppFormField
+          name="email"
+          placeholder="Email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+
+        <SubmitButton title="Next" />
+      </AppForm>
     </ScrollView>
   );
 }

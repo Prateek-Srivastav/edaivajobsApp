@@ -11,6 +11,7 @@ import RegisterScreen from "../screens/RegisterScreen";
 
 import Colors from "../constants/Colors";
 import ForgotPasswordNavigator from "./ForgotPasswordNavigator";
+import VerificationCodeScreen from "../screens/VerificationCodeScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -118,6 +119,7 @@ const AuthNavigator = () => (
         headerRight: () => rightRegisterHeader(),
       }}
     />
+    <Stack.Screen name="CodeVerification" component={VerificationCodeScreen} />
     <Stack.Screen
       name="ForgotPasswordStack"
       component={ForgotPasswordNavigator}

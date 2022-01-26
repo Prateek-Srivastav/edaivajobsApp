@@ -51,11 +51,9 @@ function MainNavigator({ route }) {
   const getTabBarVisibility = (route) => {
     const routeName = getFocusedRouteNameFromRoute(route) ?? "Feed";
 
-    if (routeName === "JobDetail" || routeName === "ApplicationStatus") {
-      setIsTabBarVisible(false);
+    if (routeName === "JobDetail" || routeName === "ApplicationStatus")
       return "none";
-    }
-    setIsTabBarVisible(true);
+
     return "flex";
   };
 

@@ -4,7 +4,7 @@ import { TransitionPresets } from "@react-navigation/stack";
 
 import MainScreen from "../screens/ForgotPasswordScreens/MainScreen.js";
 import ResetMethodScreen from "../screens/ForgotPasswordScreens/ResetMethodScreen";
-import VerificationCodeScreen from "../screens/ForgotPasswordScreens/VerificationCodeScreen";
+import VerificationCodeScreen from "../screens/VerificationCodeScreen";
 import NewPasswordScreen from "../screens/ForgotPasswordScreens/NewPasswordScreen";
 import PasswordUpdatedScreen from "../screens/ForgotPasswordScreens/PasswordUpdatedScreen";
 

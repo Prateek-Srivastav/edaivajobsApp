@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import {
   View,
   StyleSheet,
@@ -6,51 +6,52 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  SafeAreaView,
 } from "react-native";
-
-import Input from "../components/Input";
+import * as Yup from "yup";
 
 import Colors from "../constants/Colors";
+import {
+  AppForm,
+  AppFormField,
+  ErrorMessage,
+  SubmitButton,
+} from "../components/forms";
+import authApi from "../api/auth";
+import AuthContext from "../auth/context";
+import authStorage from "../auth/storage";
 
-const EMAIL = "test@test.com";
-const PASSWORD = "test1234";
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required().email().label("Email"),
+  password: Yup.string().required().min(5).label("Password"),
+});
 
 function LoginScreen({ navigation }) {
-  const [isSignup, setIsSignup] = useState(false);
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
+  const [errorMessage, setErrorMessage] = useState("");
   const [isPasswordShown, setIsPasswordShown] = useState(false);
-  const [isInvalid, setIsInvalid] = useState(false);
-  const [buttonDisabled, setbuttonDisabled] = useState(true);
+  const [loginFailed, setLoginFailed] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const inputFirstNameHandler = useCallback((inputValue, inputValidity) => {
-    setbuttonDisabled(!inputValidity);
-    setFirstName(inputValue);
-  }, []);
+  const authContext = useContext(AuthContext);
 
-  const inputLastNameHandler = useCallback((inputValue, inputValidity) => {
-    setbuttonDisabled(!inputValidity);
-    setLastName(inputValue);
-  }, []);
+  const handleSubmit = async ({ email, password }) => {
+    setLoading(true);
+    const result = await authApi.login(email, password);
+    if (!result.ok) {
+      setLoading(false);
 
-  const inputEmailHandler = useCallback((inputValue, inputValidity) => {
-    setbuttonDisabled(!inputValidity);
-    setEmail(inputValue);
-    setIsInvalid(false);
-  }, []);
+      setErrorMessage(result.data.detail);
+      console.log(result);
+      return setLoginFailed(true);
+    }
+    setLoading(false);
+    setLoginFailed(false);
+    const { access, refresh, email_verified } = result.data;
+    console.log(result);
 
-  const inputPswrdHandler = useCallback((inputValue, inputValidity) => {
-    setbuttonDisabled(!inputValidity);
-    setPassword(inputValue);
-    setIsInvalid(false);
-  }, []);
+    if (!email_verified) return navigation.navigate("CodeVerification", email);
 
-  const submitHandler = () => {
-    if (email === EMAIL && password === PASSWORD) setLogIn(true);
-    else setIsInvalid(true);
+    authContext.setTokens({ access, refresh });
+    authStorage.storeToken(access, refresh);
   };
 
   return (
@@ -68,67 +69,43 @@ function LoginScreen({ navigation }) {
         >
           <Text style={styles.authText}>Sign in</Text>
         </View>
-        {isInvalid && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>Invalid email/password</Text>
-          </View>
-        )}
 
-        <Input
-          id="email"
-          label="Email"
-          keyboardType="email-address"
-          required
-          email
-          autoCapitalize="none"
-          errorText="Please enter a valid email address."
-          onInputChange={inputEmailHandler}
-        />
-        <Input
-          id="password"
-          label="Password"
-          icon={isPasswordShown ? "ios-eye-off" : "ios-eye"}
-          onIconPress={() => setIsPasswordShown(!isPasswordShown)}
-          keyboardType="default"
-          secureTextEntry
-          required
-          minLength={5}
-          autoCapitalize="none"
-          errorText="Please enter a valid password."
-          onInputChange={inputPswrdHandler}
-        />
-
-        <TouchableOpacity
-          style={{
-            marginTop: -5,
-            alignItems: "flex-start",
-            justifyContent: "flex-end",
-            flexDirection: "row",
-          }}
-          onPress={() => navigation.navigate("ForgotPasswordStack")}
+        <AppForm
+          initialValues={{ email: "", password: "" }}
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema}
         >
-          <Text style={styles.forgotPassText}>Forgot Password?</Text>
-        </TouchableOpacity>
+          <ErrorMessage error={errorMessage} visible={loginFailed} />
+          <AppFormField
+            name="email"
+            label="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <AppFormField
+            name="password"
+            label="Password"
+            icon={isPasswordShown ? "ios-eye-off" : "ios-eye"}
+            keyboardType="default"
+            secureTextEntry={!isPasswordShown}
+            autoCapitalize="none"
+            onIconPress={() => setIsPasswordShown(!isPasswordShown)}
+          />
 
-        <TouchableOpacity
-          onPress={submitHandler}
-          activeOpacity={0.4}
-          style={{
-            ...styles.button,
-            backgroundColor: "#21b4f0",
-          }}
-        >
-          <Text
+          <TouchableOpacity
             style={{
-              fontFamily: "OpenSans-SemiBold",
-              fontSize: 16,
-              color: "white",
-              textAlign: "center",
+              marginTop: -5,
+              alignItems: "flex-start",
+              justifyContent: "flex-end",
+              flexDirection: "row",
             }}
+            onPress={() => navigation.navigate("ForgotPasswordStack")}
           >
-            Login
-          </Text>
-        </TouchableOpacity>
+            <Text style={styles.forgotPassText}>Forgot Password?</Text>
+          </TouchableOpacity>
+          <SubmitButton title={loading ? "Loading..." : "Login"} />
+        </AppForm>
+
         <View
           style={{
             flexDirection: "row",
@@ -255,20 +232,6 @@ const styles = StyleSheet.create({
     color: "#817E7E",
     fontSize: 13,
     // textAlign: "right",
-  },
-  textInput: {
-    backgroundColor: "white",
-    marginVertical: 10,
-    width: "100%",
-  },
-  button: {
-    width: "100%",
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 30,
-    borderRadius: 4,
-    alignSelf: "center",
   },
 });
 

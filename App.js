@@ -1,11 +1,12 @@
 import "react-native-gesture-handler";
 
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { enableScreens } from "react-native-screens";
 import * as Font from "expo-font";
 import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 import AuthNavigator from "./navigation/AuthNavigator";
 
@@ -16,6 +17,10 @@ import ProfileNavigator from "./navigation/ProfileNavigator";
 import TabNavigator from "./navigation/TabNavigator";
 import AppNavigator from "./navigation/AppNavigator";
 import ApplicationStatusScreen from "./screens/ApplicationStatusScreen";
+import toastConfig from "./utilities/toastConfig";
+import ChangePasswordScreen from "./screens/ChangePasswordScreen";
+import AuthContext from "./auth/context";
+import authStorage from "./auth/storage";
 
 enableScreens();
 
@@ -30,21 +35,35 @@ const fetchFonts = () => {
 };
 
 export default function App() {
-  const [fontLoaded, setFontLoaded] = React.useState(false);
+  const [isReady, setIsReady] = useState(false);
+  const [tokens, setTokens] = useState();
 
-  if (!fontLoaded) {
+  const restoreToken = async () => {
+    const storedTokens = await authStorage.getToken();
+    console.log(storedTokens);
+    if (!storedTokens.refreshToken) return;
+    setTokens(storedTokens);
+  };
+
+  if (!isReady) {
     return (
       <AppLoading
-        startAsync={fetchFonts}
-        onFinish={() => setFontLoaded(true)}
+        startAsync={async () => {
+          await fetchFonts();
+          restoreToken();
+        }}
+        onFinish={() => setIsReady(true)}
         onError={(err) => console.log(err)}
       />
     );
   }
 
   return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
+    <AuthContext.Provider value={{ tokens, setTokens }}>
+      <NavigationContainer>
+        {tokens ? <AppNavigator /> : <AuthNavigator />}
+      </NavigationContainer>
+      <Toast config={toastConfig} position="bottom" />
+    </AuthContext.Provider>
   );
 }

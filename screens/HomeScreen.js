@@ -15,18 +15,19 @@ import { Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
 
 import AppModal from "../components/AppModal";
 import Colors from "../constants/Colors";
+import dummyData from "../dummyData.js/dataOriginal";
 import FilterModalContent from "../components/FilterModalContent";
 import jobsApi from "../api/jobs";
 import JobCard from "../components/JobCard";
 import AppText from "../components/AppText";
 import CustomButton from "../components/CustomButton";
 import useApi from "../hooks/useApi";
+import { formattedDate } from "../utilities/date";
 
 const { width, height } = Dimensions.get("window");
 
 function HomeScreen({ navigation }) {
   const [isPressed, setIsPressed] = useState(false);
-  // const [jobs, setJobs] = useState();
 
   const {
     data,
@@ -65,10 +66,14 @@ function HomeScreen({ navigation }) {
 
   if (error) {
     return (
-      <>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <AppText>Couldn't load jobs</AppText>
-        <CustomButton title="Retry" onPress={loadJobs} />
-      </>
+        <CustomButton
+          title="Retry"
+          onPress={loadJobs}
+          style={{ height: 60, flex: 0.1, width: 200 }}
+        />
+      </View>
     );
   }
 
@@ -220,37 +225,18 @@ function HomeScreen({ navigation }) {
                 }}
                 data={jobs}
                 renderItem={(itemData) => {
-                  const monthNames = [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                    "Aug",
-                    "Sept",
-                    "Oct",
-                    "Nov",
-                    "Dec",
-                  ];
                   const { city, state, country } =
                     itemData.item.job_location[0];
-                  let postedDate = new Date(itemData.item.created_on);
 
                   const location = `${city}, ${state}, ${country}`;
-
-                  const date = postedDate.getDate();
-                  const month = monthNames[postedDate.getMonth()];
-
-                  postedDate =
-                    month + " " + date + ", " + postedDate.getFullYear();
 
                   return (
                     <JobCard
                       onPress={() =>
                         navigation.navigate("JobDetail", {
                           jobId: itemData.item._id,
+                          isApplied: itemData.item.applied.length !== 0,
+                          location,
                         })
                       }
                       heading={itemData.item.job_title}
@@ -258,7 +244,7 @@ function HomeScreen({ navigation }) {
                       jobType={itemData.item.job_type.name}
                       location={location}
                       description={itemData.item.job_description}
-                      postedDate={postedDate}
+                      postedDate={formattedDate(itemData.item.created_on)}
                       isApplied={itemData.item.applied}
                     />
                   );

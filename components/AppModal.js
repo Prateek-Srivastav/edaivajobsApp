@@ -20,6 +20,8 @@ import Animated, {
   withSpring,
   runOnJS,
 } from "react-native-reanimated";
+import Toast from "react-native-toast-message";
+// import { AppToast } from "./ToastConfig";
 
 import { Feather, AntDesign } from "@expo/vector-icons";
 
@@ -132,6 +134,10 @@ function AppModal(props) {
               onPress={() => {
                 top.value = withSpring(dimensions.height, SPRING_CONFIG);
                 setIsPressed();
+                Toast.show({
+                  type: "appError",
+                  text1: "xyz xyz xyz msgs",
+                });
               }}
             />
           </View>
@@ -188,17 +194,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    // top: dimensions.height,
-    // width: "100%",
-    // borderWidth: 1,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    // elevation: 5,
-    // padding: 20,
-    // paddingRight: 20,
     justifyContent: "center",
     alignItems: "center",
-    // marginHorizontal: 5,
   },
   modalContentContainer: {
     backgroundColor: Colors.bg,
@@ -209,8 +206,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     elevation: 5,
     padding: 20,
-    // paddingRight: 20,
-    // justifyContent: "space-between",
     alignItems: "center",
   },
 });

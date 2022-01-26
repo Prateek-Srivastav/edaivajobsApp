@@ -14,12 +14,7 @@ const Stack = createNativeStackNavigator();
 
 const leftHeader = () => {
   const navigation = useNavigation();
-  let isBackShown = true;
-  // if (
-  //   navigation.getRootState() === undefined ||
-  //   navigation.getRootState().routes.length === 1
-  // )
-  //   isBackShown = false;
+
   return (
     <View
       style={{
@@ -28,7 +23,7 @@ const leftHeader = () => {
         alignItems: "center",
       }}
     >
-      {isBackShown && (
+      {navigation.canGoBack() && (
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons
             name="arrow-back-outline"
@@ -81,7 +76,7 @@ const JobsNavigator = () => (
       name="Home"
       component={HomeScreen}
       options={{
-        //   headerShadowVisible: false,
+        headerShadowVisible: false,
         headerShown: false,
         // headerStyle: { backgroundColor: "#FDFDFD" },
         // headerRight: () => rightLoginHeader(),
@@ -94,13 +89,6 @@ const JobsNavigator = () => (
         headerRight: () => rightLoginHeader(),
       }}
     />
-    {/* <Stack.Screen
-      name="Register"
-      component={RegisterScreen}
-      options={{
-        headerRight: () => rightRegisterHeader(),
-      }}
-    /> */}
   </Stack.Navigator>
 );
 

@@ -7,59 +7,47 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import * as Yup from "yup";
 
+import {
+  AppForm,
+  AppFormField,
+  ErrorMessage,
+  SubmitButton,
+} from "../components/forms";
+import authApi from "../api/auth";
 import Input from "../components/Input";
 import Colors from "../constants/Colors";
 
-const EMAIL = "test@test.com";
-const PASSWORD = "test1234";
+const validationSchema = Yup.object().shape({
+  firstname: Yup.string().required().min(3).label("First Name"),
+  lastname: Yup.string().required().min(3).label("Last Name"),
+  email: Yup.string().required().email().label("Email"),
+  password: Yup.string().required().min(5).label("Password"),
+});
 
-function RegisterScreen(props) {
-  const [isSignup, setIsSignup] = useState(false);
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState();
-  const [logIn, setLogIn] = useState();
-  const [isInvalid, setIsInvalid] = useState(false);
-  const [buttonDisabled, setbuttonDisabled] = useState(true);
+function RegisterScreen({ navigation }) {
+  const [errorMessage, setErrorMessage] = useState("");
   const [isPasswordShown, setIsPasswordShown] = useState(false);
+  const [registerFailed, setRegisterFailed] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const inputFirstNameHandler = useCallback((inputValue, inputValidity) => {
-    setbuttonDisabled(!inputValidity);
-    setFirstName(inputValue);
-  }, []);
-
-  const inputLastNameHandler = useCallback((inputValue, inputValidity) => {
-    setbuttonDisabled(!inputValidity);
-    setLastName(inputValue);
-  }, []);
-
-  const inputEmailHandler = useCallback((inputValue, inputValidity) => {
-    setbuttonDisabled(!inputValidity);
-    setEmail(inputValue);
-    setIsInvalid(false);
-  }, []);
-
-  const inputPswrdHandler = useCallback((inputValue, inputValidity) => {
-    setbuttonDisabled(!inputValidity);
-    setPassword(inputValue);
-    setIsInvalid(false);
-  }, []);
-
-  const submitHandler = () => {
-    if (email === EMAIL && password === PASSWORD) setLogIn(true);
-    else setIsInvalid(true);
+  const handleSubmit = async (values) => {
+    setLoading(true);
+    const result = await authApi.register(values);
+    if (!result.ok) {
+      setLoading(false);
+      setErrorMessage(result.data.email[0]);
+      return setRegisterFailed(true);
+    }
+    setLoading(false);
+    setRegisterFailed(false);
+    navigation.navigate("CodeVerification", { email: values.email });
   };
-
-  if (logIn) return <JobsListingScreen />;
 
   return (
     <View style={styles.screen}>
-      <ScrollView
-        // showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.authContainer}
-      >
+      <ScrollView contentContainerStyle={styles.authContainer}>
         <View
           style={{
             flexDirection: "row",
@@ -69,108 +57,77 @@ function RegisterScreen(props) {
         >
           <Text style={styles.authText}>Welcome.</Text>
         </View>
-        {/* {isInvalid && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>Invalid email/password</Text>
-          </View>
-        )} */}
 
-        <Input
-          id="firstName"
-          label="First Name"
-          keyboardType="default"
-          required
-          minLength={3}
-          autoCapitalize="words"
-          errorText="Please enter a valid name."
-          onInputChange={inputFirstNameHandler}
-        />
-
-        <Input
-          id="lastName"
-          label="Last Name"
-          keyboardType="default"
-          required
-          minLength={3}
-          autoCapitalize="words"
-          errorText="Please enter a valid name."
-          onInputChange={inputLastNameHandler}
-        />
-        <Input
-          id="email"
-          label="Email"
-          keyboardType="email-address"
-          required
-          email
-          autoCapitalize="none"
-          errorText="Please enter a valid email address."
-          onInputChange={inputEmailHandler}
-        />
-        <Input
-          id="password"
-          label="Password"
-          icon="ios-eye"
-          icon={isPasswordShown ? "ios-eye-off" : "ios-eye"}
-          onIconPress={() => setIsPasswordShown(!isPasswordShown)}
-          keyboardType="default"
-          secureTextEntry
-          required
-          minLength={5}
-          autoCapitalize="none"
-          errorText="Please enter a valid password."
-          onInputChange={inputPswrdHandler}
-        />
-
-        <View style={{ flex: 1, flexDirection: "row", flexWrap: "wrap" }}>
-          <Text style={styles.forgotPassText}>
-            By clicking Sign Up, you agree to our{" "}
-          </Text>
-          <TouchableOpacity>
-            <Text
-              style={{
-                flex: 1,
-                fontFamily: "OpenSans-Regular",
-                color: Colors.primary,
-                fontSize: 12.8,
-              }}
-            >
-              Terms of Use
-            </Text>
-          </TouchableOpacity>
-          <Text style={styles.forgotPassText}> and our </Text>
-          <TouchableOpacity>
-            <Text
-              style={{
-                flex: 1,
-                fontFamily: "OpenSans-Regular",
-                color: Colors.primary,
-                fontSize: 12.8,
-              }}
-            >
-              Privacy Policy.
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          onPress={submitHandler}
-          // disabled={buttonDisabled}
-          activeOpacity={0.4}
-          style={{
-            ...styles.button,
-            backgroundColor: Colors.primary,
+        <AppForm
+          initialValues={{
+            firstname: "",
+            lastname: "",
+            email: "",
+            password: "",
           }}
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema}
         >
-          <Text
-            style={{
-              fontFamily: "OpenSans-SemiBold",
-              fontSize: 16,
-              color: "white",
-              textAlign: "center",
-            }}
-          >
-            Signup
-          </Text>
-        </TouchableOpacity>
+          <ErrorMessage error={errorMessage} visible={registerFailed} />
+          <AppFormField
+            name="firstname"
+            label="First Name"
+            keyboardType="default"
+            autoCapitalize="words"
+          />
+          <AppFormField
+            name="lastname"
+            label="Last Name"
+            keyboardType="default"
+            autoCapitalize="words"
+          />
+          <AppFormField
+            name="email"
+            label="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <AppFormField
+            name="password"
+            label="Password"
+            icon={isPasswordShown ? "ios-eye-off" : "ios-eye"}
+            keyboardType="default"
+            secureTextEntry={!isPasswordShown}
+            autoCapitalize="none"
+            onIconPress={() => setIsPasswordShown(!isPasswordShown)}
+          />
+          <View style={{ flex: 1, flexDirection: "row", flexWrap: "wrap" }}>
+            <Text style={styles.forgotPassText}>
+              By clicking Sign Up, you agree to our{" "}
+            </Text>
+            <TouchableOpacity>
+              <Text
+                style={{
+                  flex: 1,
+                  fontFamily: "OpenSans-Regular",
+                  color: Colors.primary,
+                  fontSize: 12.8,
+                }}
+              >
+                Terms of Use
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.forgotPassText}> and our </Text>
+            <TouchableOpacity>
+              <Text
+                style={{
+                  flex: 1,
+                  fontFamily: "OpenSans-Regular",
+                  color: Colors.primary,
+                  fontSize: 12.8,
+                }}
+              >
+                Privacy Policy.
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <SubmitButton title={loading ? "Loading..." : "Sign up"} />
+        </AppForm>
         <View
           style={{
             flexDirection: "row",

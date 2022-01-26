@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
   Animated,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import {
   FontAwesome,
   MaterialCommunityIcons,
   Ionicons,
 } from "@expo/vector-icons";
+import RenderHtml, { defaultSystemFonts } from "react-native-render-html";
 
 import AppModal from "../components/AppModal";
 import ApplicationModalContent from "../components/ApplicationModalContent";
@@ -23,8 +25,25 @@ import Colors from "../constants/Colors";
 import CustomButton from "../components/CustomButton";
 import jobsApi from "../api/jobs";
 import useApi from "../hooks/useApi";
+import { formattedDate } from "../utilities/date";
 
-const { width, height } = Dimensions.get("screen");
+import dummyJobDetails from "../dummyData.js/dummyJobDetails";
+
+const { width, height } = Dimensions.get("window");
+
+const NormalText = ({ children }) => (
+  <Text
+    style={{
+      color: Colors.black,
+      fontFamily: "OpenSans-Regular",
+      fontSize: 14.5,
+      marginTop: 5,
+      marginBottom: 10,
+    }}
+  >
+    {children}
+  </Text>
+);
 
 function JobDetailScreen({ route }) {
   const [showDetail, setShowDetail] = useState(1);
@@ -33,19 +52,33 @@ function JobDetailScreen({ route }) {
 
   const jobId = route.params.jobId;
 
-  const {
-    data: jobDetails,
-    error,
-    networkError,
-    loading,
-    request: loadJobDetails,
-  } = useApi(jobsApi.getJobDetails);
+  const [jobDetails, setJobDetails] = useState(dummyJobDetails);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [networkError, setNetworkError] = useState(false);
+
+  // let jobDetails;
+  const loadJobDetails = async (jobId) => {
+    setLoading(true);
+    const response = await jobsApi.getJobDetails(jobId);
+
+    if (!response.ok) {
+      setLoading(false);
+
+      if (response.problem === "NETWORK_ERROR") return setNetworkError(true);
+      else return setError(true);
+    }
+    setNetworkError(false);
+    setError(false);
+    setJobDetails(response.data);
+    setLoading(false);
+  };
 
   useEffect(() => {
     loadJobDetails(jobId);
   }, []);
 
-  // const { width } = Dimensions.get("screen");
+  // let jobDetails = dummyJobDetails;
 
   const getData = (val) => {
     setIsPressed(false);
@@ -61,6 +94,8 @@ function JobDetailScreen({ route }) {
   };
 
   const Description = ({ show }) => {
+    const systemFonts = [...defaultSystemFonts, "OpenSans-Regular"];
+
     const animate = (value) => {
       Animated.timing(position, {
         toValue: { x: value, y: 0 },
@@ -74,42 +109,130 @@ function JobDetailScreen({ route }) {
       detail = jobDetails.job_description;
       animate(width / 20);
     } else if (show === 2) {
-      detail = jobDetails.responsibility;
+      detail = jobDetails.job_requirements;
       animate(width / 2.4);
     } else if (show === 3) {
-      detail = jobDetails.more;
+      detail = jobDetails.preferred_qualification;
       animate(width / 1.44);
     }
 
     return (
-      <ScrollView
+      <View
         style={{
           paddingHorizontal: 20,
-          paddingBottom: 20,
+          // paddingBottom: 20,
           width: "100%",
-          marginTop: 10,
-          // marginBottom: 10,
+          marginTop: show === 2 ? 0 : 10,
         }}
       >
-        <AppText
-          style={{
-            color: Colors.black,
-            textAlign: "justify",
-          }}
-        >
-          {detail}
-        </AppText>
-      </ScrollView>
+        {show !== 3 ? (
+          <RenderHtml
+            contentWidth={width}
+            source={{
+              html: detail,
+            }}
+            systemFonts={systemFonts}
+            baseStyle={{
+              fontFamily: "OpenSans-Regular",
+              fontSize: 14.5,
+              color: Colors.black,
+            }}
+          />
+        ) : (
+          <>
+            <AppText>Minimum Qualification</AppText>
+            <RenderHtml
+              contentWidth={width}
+              source={{
+                html: jobDetails.minimum_qualification,
+              }}
+              systemFonts={systemFonts}
+              baseStyle={{
+                fontFamily: "OpenSans-Regular",
+                fontSize: 14.5,
+                color: Colors.primary,
+              }}
+            />
+            <AppText>Preferred Qualification</AppText>
+            <RenderHtml
+              contentWidth={width}
+              source={{
+                html: jobDetails.preferred_qualification,
+              }}
+              systemFonts={systemFonts}
+              baseStyle={{
+                fontFamily: "OpenSans-Regular",
+                fontSize: 14.5,
+                color: Colors.black,
+              }}
+            />
+            <AppText>Job Supplements</AppText>
+            <NormalText>{jobDetails.job_supplement_pay[0].name}</NormalText>
+            <AppText>Job Schedule</AppText>
+            <NormalText>{jobDetails.job_schedule[0].name}</NormalText>
+            {!jobDetails.salary_undisclosed && jobDetails.salary && (
+              <>
+                <AppText>Salary</AppText>
+                <NormalText>
+                  ₹{jobDetails.salary.salary_from} - ₹
+                  {jobDetails.salary.salary_to} {jobDetails.salary.salary_type}
+                </NormalText>
+              </>
+            )}
+            <AppText>Remote</AppText>
+            <NormalText>{jobDetails.job_remote.name}</NormalText>
+            <AppText>Open Positions</AppText>
+            <NormalText>{jobDetails.no_of_vacancy}</NormalText>
+          </>
+        )}
+      </View>
     );
   };
+  if (networkError && !loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <AppText>Connection Lost</AppText>
+        <CustomButton
+          title="Refresh"
+          onPress={loadJobDetails}
+          style={{ height: 60, flex: 0.1, width: 200 }}
+        />
+      </View>
+    );
+  }
 
-  return loading ? (
-    <View style={styles.loading}>
-      <ActivityIndicator size="large" color={Colors.primary} />
-    </View>
-  ) : (
-    <View style={{ flex: 1, width: width, height: height }}>
-      <View style={styles.container}>
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <AppText>Couldn't load jobs</AppText>
+        <CustomButton
+          title="Retry"
+          onPress={loadJobDetails}
+          style={{ height: 60, flex: 0.1, width: 200 }}
+        />
+      </View>
+    );
+  }
+  if (loading)
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        width: width,
+        height: height,
+        backgroundColor: Colors.bg,
+      }}
+    >
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{ alignItems: "center" }}
+      >
         <View
           style={{
             // flex: 1,
@@ -120,7 +243,7 @@ function JobDetailScreen({ route }) {
           }}
         >
           <Card style={styles.card}>
-            <Text style={styles.heading}>{jobDetails.heading}</Text>
+            <Text style={styles.heading}>{jobDetails.job_title}</Text>
 
             <View
               style={{
@@ -130,11 +253,11 @@ function JobDetailScreen({ route }) {
               }}
             >
               <BuildingIcon color="#BDEEFF" />
-              <Text style={styles.text}>{jobDetails.companyName}</Text>
+              <Text style={styles.text}>{jobDetails.company.name}</Text>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Location color="#BDEEFF" />
-              <Text style={styles.text}>{jobDetails.location}</Text>
+              <Text style={styles.text}>{route.params.location}</Text>
             </View>
             <Card
               style={{
@@ -147,11 +270,11 @@ function JobDetailScreen({ route }) {
             >
               <View style={styles.cardBlue}>
                 <AppText style={{ color: Colors.primary }}>
-                  {jobDetails.jobType}
+                  {jobDetails.job_type.name}
                 </AppText>
               </View>
 
-              {!jobDetails.isApplied && (
+              {!route.params.isApplied && (
                 <View
                   style={{
                     justifyContent: "center",
@@ -172,7 +295,7 @@ function JobDetailScreen({ route }) {
                       color: Colors.primary,
                     }}
                   >
-                    {jobDetails.lastApplicationDate}
+                    {formattedDate(jobDetails.job_deadline)}
                   </AppText>
                 </View>
               )}
@@ -197,14 +320,17 @@ function JobDetailScreen({ route }) {
               >
                 <View>
                   <AppText style={{ marginBottom: 6 }}>Degree</AppText>
-                  <AppText style={styles.requirementText}>Graduate</AppText>
-                  <AppText style={styles.requirementText}>
-                    Post graduate
-                  </AppText>
+                  {jobDetails.qualification.map((qual) => (
+                    <AppText style={styles.requirementText} key={qual._id}>
+                      {qual.name}
+                    </AppText>
+                  ))}
                 </View>
                 <View>
                   <AppText style={{ marginBottom: 6 }}>Work Experience</AppText>
-                  <AppText style={styles.requirementText}>0-2 Years</AppText>
+                  <AppText style={styles.requirementText}>
+                    {jobDetails.job_exp_from}-{jobDetails.job_exp_to} Years
+                  </AppText>
                 </View>
               </View>
               <View>
@@ -213,11 +339,14 @@ function JobDetailScreen({ route }) {
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
+                    flexWrap: "wrap",
                   }}
                 >
-                  <AppText style={styles.requirementText}>Python </AppText>
-                  <AppText style={styles.requirementText}>Angular </AppText>
-                  <AppText style={styles.requirementText}>Javascript</AppText>
+                  {jobDetails.skills.map((skill, index) => (
+                    <AppText style={styles.requirementText} key={index}>
+                      {skill.name}
+                    </AppText>
+                  ))}
                 </View>
               </View>
             </Card>
@@ -252,45 +381,47 @@ function JobDetailScreen({ route }) {
           <Animated.View style={animStyles} />
         </View>
         <Description show={showDetail} />
-        <View
+      </ScrollView>
+      <View
+        style={{
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+          backgroundColor: Colors.bg,
+          marginBottom: 15,
+          marginVertical: 10,
+          paddingHorizontal: 15,
+        }}
+      >
+        <TouchableOpacity
+          activeOpacity={0.7}
           style={{
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-evenly",
+            elevation: 3,
+            height: 40,
+            width: 40,
+            justifyContent: "center",
             alignItems: "center",
-            marginVertical: -10,
-            paddingHorizontal: 15,
+            borderRadius: 3,
+            backgroundColor: "white",
+            padding: 4,
+            marginRight: 10,
           }}
         >
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={{
-              elevation: 3,
-              height: 40,
-              width: 40,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 3,
-              backgroundColor: "white",
-              padding: 4,
-              marginRight: 10,
-            }}
-          >
-            <MaterialCommunityIcons
-              name="bookmark-minus-outline"
-              size={24}
-              color={Colors.primary}
-            />
-          </TouchableOpacity>
-          <CustomButton
-            disabled={jobDetails.isApplied}
-            onPress={() => {
-              setIsPressed(true);
-            }}
-            title={jobDetails.isApplied ? "Applied" : "Apply"}
-            // style={{ width: "72%" }}
+          <MaterialCommunityIcons
+            name="bookmark-minus-outline"
+            size={24}
+            color={Colors.primary}
           />
-        </View>
+        </TouchableOpacity>
+        <CustomButton
+          disabled={jobDetails.isApplied}
+          onPress={() => {
+            setIsPressed(true);
+          }}
+          title={jobDetails.isApplied ? "Applied" : "Apply"}
+          style={{ marginVertical: 0 }}
+        />
       </View>
 
       <AppModal
@@ -329,9 +460,10 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: "center",
+    // alignItems: "center",
     backgroundColor: Colors.bg,
     // width: "100%",
+    // marginBottom: -10,
   },
   detailsHeading: {
     fontFamily: "OpenSans-SemiBold",
@@ -354,6 +486,7 @@ const styles = StyleSheet.create({
     color: Colors.black,
     fontSize: 15,
     marginStart: 5,
+    marginEnd: 10,
   },
   text: {
     fontFamily: "OpenSans-Medium",

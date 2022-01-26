@@ -95,9 +95,9 @@ function ApplicationModalContent({ data }) {
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <AppText>Applying for</AppText>
-      <AppText style={styles.boldText}>{data.heading}</AppText>
+      <AppText style={styles.boldText}>{data.job_title}</AppText>
       <AppText style={styles.text}>Organization</AppText>
-      <AppText style={styles.boldText}>{data.companyName}</AppText>
+      <AppText style={styles.boldText}>{data.company.name}</AppText>
       <AppText style={styles.text}>When you are ready to join:</AppText>
       {/* <View> */}
       {/* <View style={{ marginRight: 20, width: "100%" }}> */}

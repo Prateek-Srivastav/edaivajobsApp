@@ -12,7 +12,6 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 
 import AppText from "../components/AppText";
 import Colors from "../constants/Colors";
-import dummyData from "../dummyData.js/data";
 import { BuildingIcon, Location } from "../assets/svg/icons";
 import CustomAlert from "./CustomAlert";
 import CustomButton from "./CustomButton";
