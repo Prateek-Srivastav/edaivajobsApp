@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -14,67 +14,72 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { Feather, AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
+import cache from "../../utilities/cache";
+import candidateApi from "../../api/candidate";
 import Card from "../../components/Card";
+import CardInput from "../../components/CardInput";
 import CustomButton from "../../components/CustomButton";
 import Colors from "../../constants/Colors";
 import AppText from "../../components/AppText";
-import CardInput from "../../components/CardInput";
 import ExperienceCard from "../../components/ExperienceCard";
 import dummyData from "../../dummyData.js/data";
+import Error from "../../components/Error";
+import NetworkError from "../../components/NetworkError";
+import useApi from "../../hooks/useApi";
+import Loading from "../../components/Loading";
+import PersonalDetails from "../../components/profileDetails/PersonalDetails";
 
 const { width, height } = Dimensions.get("window");
 
-function EditProfileScreen(props) {
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
-  const [selectedBirthDate, setSelectedBirthDate] = useState();
-  const [origin, setOrigin] = useState("");
+const SmallText = (props) => (
+  <Text style={styles.smallText}>{props.children}</Text>
+);
+
+const NormalText = (props) => (
+  <Text style={styles.normalText}>{props.children}</Text>
+);
+
+const LargeText = (props) => (
+  <Text style={styles.largeText}>{props.children}</Text>
+);
+
+function EditProfileScreen() {
+  const [user, setUser] = useState({});
+  const [address, setAddress] = useState();
 
   const navigation = useNavigation();
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
+  const {
+    data,
+    error,
+    networkError,
+    loading,
+    tokenValid,
+    request: loadProfile,
+  } = useApi(candidateApi.getProfile);
 
-    setShow(Platform.OS === "ios");
-    setDate(currentDate);
-
-    if (origin === "birthDate") {
-      let date = currentDate.getDate();
-      let month = currentDate.getMonth() + 1;
-
-      if (date <= 9) date = "0" + date;
-      if (month < 10) month = "0" + month;
-
-      setSelectedBirthDate(
-        date + "/" + month + "/" + currentDate.getFullYear()
-      );
+  useEffect(async () => {
+    await loadProfile();
+    if (!tokenValid) {
+      refreshAccessToken();
+      await loadProfile();
     }
-  };
+    const userDetail = await cache.get("user");
+    setUser(userDetail);
+  }, []);
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
+  // if (data) {
+  //   const { address1, address2, city, state, country } = data;
+  //   const address = `${address1}, ${
+  //     address2 !== "" ? address2 + "," : null
+  //   } ${city}, ${state}, ${country}`;
 
-  const showDatepicker = () => {
-    showMode("date");
-  };
+  //   setAddress(address);
+  // }
 
-  const showTimepicker = () => {
-    showMode("time");
-  };
-  const SmallText = (props) => (
-    <Text style={styles.smallText}>{props.children}</Text>
-  );
+  if (networkError && !loading) return <NetworkError onPress={loadProfile} />;
 
-  const NormalText = (props) => (
-    <Text style={styles.normalText}>{props.children}</Text>
-  );
-
-  const LargeText = (props) => (
-    <Text style={styles.largeText}>{props.children}</Text>
-  );
+  if (error) return <Error onPress={loadProfile} />;
 
   const DetailHeading = ({ label, onPress }) => (
     <View
@@ -135,7 +140,9 @@ function EditProfileScreen(props) {
     );
   };
 
-  return (
+  return loading || !data ? (
+    <Loading />
+  ) : (
     <View style={styles.container}>
       <View
         style={{
@@ -154,27 +161,26 @@ function EditProfileScreen(props) {
           style={{ height: 70, width: 70, marginRight: 5, marginLeft: 8 }}
         />
         <View style={{ width: "70%", marginRight: 5 }}>
-          <LargeText>Tom Anderson</LargeText>
-          <Card style={{ justifyContent: "flex-start", paddingVertical: 5 }}>
-            <NormalText>UI / UX Designer</NormalText>
-          </Card>
+          <LargeText>
+            {user.firstname} {user.lastname}
+          </LargeText>
+          {data.designation && (
+            <Card style={{ justifyContent: "flex-start", paddingVertical: 5 }}>
+              <NormalText>{data.designation}</NormalText>
+            </Card>
+          )}
         </View>
       </View>
       <ScrollView>
-        <View style={{ marginHorizontal: 15 }}>
-          <DetailHeading
-            label="Personal Details"
-            onPress={() =>
-              navigation.navigate("EditProfileDetail", {
-                component: "personal",
-              })
-            }
-          />
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <AppText>EMAIL:{"  "}</AppText>
-            <AppText style={{ color: Colors.black }}>xyz@gmail.com </AppText>
-          </View>
-        </View>
+        <PersonalDetails
+          data={data}
+          onPress={() =>
+            navigation.navigate("EditProfileDetail", {
+              component: "personal",
+              data,
+            })
+          }
+        />
 
         <View style={{ ...styles.line, marginTop: 15 }} />
         <View style={{ marginHorizontal: 15 }}>
@@ -264,17 +270,6 @@ function EditProfileScreen(props) {
         >
           {/* <Text>Hello Social Links</Text> */}
         </AddDetails>
-
-        {show && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            maximumDate={new Date()}
-            value={date}
-            mode={mode}
-            display="default"
-            onChange={onChange}
-          />
-        )}
       </ScrollView>
     </View>
   );

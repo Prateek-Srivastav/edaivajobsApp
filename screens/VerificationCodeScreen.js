@@ -100,6 +100,7 @@ function VerificationCodeScreen({ navigation, route }) {
       email: route.params.email,
       otp: otp,
     });
+
     if (!result.ok) {
       setLoading(false);
 
@@ -109,15 +110,18 @@ function VerificationCodeScreen({ navigation, route }) {
       });
       return setVerifyOtpFailed(true);
     }
+
     setLoading(false);
     setVerifyOtpFailed(false);
     Toast.show({
       type: "appSuccess",
       text1: result.data.message,
     });
-    if (navigation.getState().routes[0].name === "Welcome")
-      navigation.navigate("AppNavigator", result.data);
-    else navigation.navigate("NewPassword");
+
+    if (navigation.getState().routes[0].name === "Welcome") {
+      cache.store("user", result.data.user);
+      navigation.navigate("AppNavigator");
+    } else navigation.navigate("NewPassword");
   };
 
   return (

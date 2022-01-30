@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 import { DrawerContentScrollView } from "@react-navigation/drawer";
@@ -16,6 +16,8 @@ import {
 } from "../assets/svg/icons";
 import AuthContext from "../auth/context";
 import authStorage from "../auth/storage";
+import cache from "../utilities/cache";
+import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 
 const NormalText = (props) => (
   <Text style={styles.normalText}>{props.children}</Text>
@@ -52,6 +54,18 @@ const NavigatorButton = ({ title, icon, ...otherProps }) => (
 
 function CustomDrawer(props) {
   const { setTokens } = useContext(AuthContext);
+  const [user, setUser] = useState({});
+
+  const getUser = async () => {
+    const data = await cache.get("user");
+    setUser(data);
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
+  const { firstname, lastname, email } = user;
 
   const handleSignOut = async () => {
     setTokens(null);
@@ -60,8 +74,10 @@ function CustomDrawer(props) {
 
   return (
     <DrawerContentScrollView {...props} style={{ padding: 25 }}>
-      <LargeText>Tom Anderson</LargeText>
-      <AppText>xyz@gmail.com</AppText>
+      <LargeText>
+        {firstname} {lastname}
+      </LargeText>
+      <AppText>{email}</AppText>
       <HorizontalLine marginTop={10} />
       <View style={styles.navigatorsContainer}>
         <NavigatorButton

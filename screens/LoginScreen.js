@@ -19,6 +19,7 @@ import {
 import authApi from "../api/auth";
 import AuthContext from "../auth/context";
 import authStorage from "../auth/storage";
+import cache from "../utilities/cache";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -45,13 +46,13 @@ function LoginScreen({ navigation }) {
     }
     setLoading(false);
     setLoginFailed(false);
-    const { access, refresh, email_verified } = result.data;
-    console.log(result);
+    const { access, refresh, email_verified, user } = result.data;
 
     if (!email_verified) return navigation.navigate("CodeVerification", email);
 
     authContext.setTokens({ access, refresh });
     authStorage.storeToken(access, refresh);
+    cache.store("user", user);
   };
 
   return (

@@ -1,31 +1,25 @@
 import React, { useState } from "react";
-import { View, ScrollView, StyleSheet } from "react-native";
-
-import { MaterialIcons } from "@expo/vector-icons";
+import { ScrollView, StyleSheet } from "react-native";
 
 import AppPicker from "../../components/AppPicker";
 import CardInput from "../../components/CardInput";
 import CustomButton from "../../components/CustomButton";
+import DatePicker from "../../components/DatePicker";
 
 function PersonalDetailsScreen(props) {
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
-  const [selectedBirthDate, setSelectedBirthDate] = useState();
-  const [origin, setOrigin] = useState("");
+  const [dob, setDob] = useState();
 
   return (
     <ScrollView
       contentContainerStyle={{ padding: 15 }}
       style={styles.container}
     >
-      <AppPicker
-        label="DATE OF BIRTH"
-        title={selectedBirthDate ? selectedBirthDate : "Date"}
-        icon={<MaterialIcons name="date-range" size={17} color="#817E7E" />}
-        onPress={() => {
-          setOrigin("birthDate");
-          showDatepicker();
+      <CardInput label="EMAIL" />
+      <DatePicker
+        minDate={null}
+        onDateChange={(date) => {
+          setDob(date);
+          console.log(dob, "dob");
         }}
       />
       <CardInput label="PHONE" />

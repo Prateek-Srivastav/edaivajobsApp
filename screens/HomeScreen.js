@@ -23,6 +23,9 @@ import AppText from "../components/AppText";
 import CustomButton from "../components/CustomButton";
 import useApi from "../hooks/useApi";
 import { formattedDate } from "../utilities/date";
+import NetworkError from "../components/NetworkError";
+import Error from "../components/Error";
+import Loading from "../components/Loading";
 
 const { width, height } = Dimensions.get("window");
 
@@ -51,31 +54,9 @@ function HomeScreen({ navigation }) {
     setIsPressed(false);
   };
 
-  if (networkError && !loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <AppText>Connection Lost</AppText>
-        <CustomButton
-          title="Refresh"
-          onPress={loadJobs}
-          style={{ height: 60, flex: 0.1, width: 200 }}
-        />
-      </View>
-    );
-  }
+  if (networkError && !loading) return <NetworkError onPress={loadJobs} />;
 
-  if (error) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <AppText>Couldn't load jobs</AppText>
-        <CustomButton
-          title="Retry"
-          onPress={loadJobs}
-          style={{ height: 60, flex: 0.1, width: 200 }}
-        />
-      </View>
-    );
-  }
+  if (error) return <Error onPress={loadJobs} />;
 
   return (
     <View style={{ flex: 1, width }}>
@@ -112,9 +93,7 @@ function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         {loading ? (
-          <View style={styles.loading}>
-            <ActivityIndicator size="large" color={Colors.primary} />
-          </View>
+          <Loading />
         ) : (
           <>
             <TouchableOpacity style={styles.reminderContainer}>
@@ -336,12 +315,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     backgroundColor: "#D4D4D4",
   },
-  loading: {
-    flex: 1,
-    backgroundColor: Colors.bg,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
   panelHandle: {
     width: 40,
     height: 8,

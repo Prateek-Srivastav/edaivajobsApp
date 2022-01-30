@@ -1,4 +1,5 @@
 import * as SecureStore from "expo-secure-store";
+// import moment from "moment";
 
 const accessKey = "accessToken";
 const refreshKey = "refreshToken";
@@ -14,6 +15,15 @@ const storeToken = async (accessToken, refreshToken) => {
 
 const getToken = async () => {
   try {
+    // const now = moment(Date.now());
+    // const storedTime = moment(item.timestamp);
+    // const isExpired = now.diff(storedTime, "days") >= 200;
+
+    // if (isExpired) {
+    //   removeToken();
+    //   return null;
+    // }
+
     return {
       accessToken: await SecureStore.getItemAsync(accessKey),
       refreshToken: await SecureStore.getItemAsync(refreshKey),
