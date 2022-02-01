@@ -1,13 +1,24 @@
-import React from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
-
-import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import { Ionicons, Feather } from "@expo/vector-icons";
 
 import Colors from "../constants/Colors";
 import AppText from "./AppText";
+import CustomAlert from "./CustomAlert";
+import PickerItem from "./PickerItem";
+import Loading from "./Loading";
 
 function AppPicker(props) {
-  const { onPress } = props;
+  const [visible, setVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState();
+
+  const { items, onSelectItem } = props;
 
   return (
     <View
@@ -21,26 +32,19 @@ function AppPicker(props) {
           style={{
             alignSelf: "flex-start",
             fontSize: 13,
-            // marginTop: 10,
             marginVertical: 5,
           }}
         >
           {props.label}
         </AppText>
       )}
-      {/* <View style={{ ...styles.picker }}> */}
       <TouchableOpacity
-        onPress={onPress}
+        onPress={() => {
+          // onPress();
+          setVisible(true);
+        }}
         activeOpacity={0.8}
         style={styles.picker}
-        // style={{
-        //   flexDirection: "row",
-        //   justifyContent: "space-between",
-        //   alignItems: "center",
-        //   // flex: 1,
-        //   // borderWidth: 1,
-        //   // width: "100%",
-        // }}
       >
         <Text style={{ ...styles.title, ...props.titleStyle }}>
           {props.title}
@@ -55,13 +59,46 @@ function AppPicker(props) {
           />
         )}
       </TouchableOpacity>
-      {/* {props.children ? props.children : null} */}
-      {/* </View> */}
+      <CustomAlert modalWidth="90%" visible={visible}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => setVisible(false)}
+        >
+          <Feather name="x" size={24} color={Colors.black} />
+        </TouchableOpacity>
+        {props.loading && <Loading />}
+        <FlatList
+          data={items}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => {
+            return (
+              <PickerItem
+                label={item.name}
+                selected={selectedItem}
+                onPress={() => {
+                  setSelectedItem(item.name);
+                  onSelectItem(item);
+                  setVisible(false);
+                }}
+              />
+            );
+          }}
+        />
+      </CustomAlert>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  button: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "flex-end",
+    top: -10,
+  },
   container: {
     width: "100%",
     // flex: 1,
@@ -77,12 +114,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     paddingVertical: 10,
     paddingHorizontal: 10,
-    // margin: 5,
-    // marginVertical: 5,
-    // width: "100%",
-    // flex: 1,
-    // borderWidth: 1,
-    // marginHorizontal: 5,
   },
   title: {
     color: "#817E7E",

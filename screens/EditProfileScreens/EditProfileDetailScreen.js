@@ -15,9 +15,11 @@ import PersonalDetailsScreen from "./PersonalDetailsScreen";
 
 function EditProfileDetailScreen({ route }) {
   const component = route.params.component;
+  const data = route.params.data;
   let renderScreen;
 
-  if (component === "personal") renderScreen = <PersonalDetailsScreen />;
+  if (component === "personal")
+    renderScreen = <PersonalDetailsScreen data={data} />;
   else if (component === "exp") renderScreen = <AddExperienceScreen />;
   else if (component === "acad") renderScreen = <AddAcademicsScreen />;
   else if (component === "skills") renderScreen = <AddSkillsScreen />;

@@ -44,7 +44,7 @@ function ProfileScreen({ navigation }) {
   useEffect(async () => {
     await loadProfile();
     if (!tokenValid) {
-      await refreshAccessToken();
+      refreshAccessToken();
       await loadProfile();
     }
     const userDetail = await cache.get("user");

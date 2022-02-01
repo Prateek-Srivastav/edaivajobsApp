@@ -10,7 +10,7 @@ import {
   Animated,
 } from "react-native";
 
-const CustomAlert = ({ visible, children }) => {
+const CustomAlert = ({ visible, children, modalWidth }) => {
   const [showModal, setShowModal] = useState(visible);
   const scaleValue = useRef(new Animated.Value(0)).current;
   useEffect(() => {
@@ -25,11 +25,11 @@ const CustomAlert = ({ visible, children }) => {
         useNativeDriver: true,
       }).start();
     } else {
-      setTimeout(() => setShowModal(false), 200);
+      setTimeout(() => setShowModal(false), 160);
       // setShowModal(false);
       Animated.timing(scaleValue, {
         toValue: 0,
-        duration: 300,
+        duration: 150,
         useNativeDriver: true,
       }).start();
     }
@@ -40,6 +40,7 @@ const CustomAlert = ({ visible, children }) => {
         <Animated.View
           style={[
             styles.modalContainer,
+            { width: modalWidth ? modalWidth : "80%" },
             { transform: [{ scale: scaleValue }] },
           ]}
         >
@@ -58,11 +59,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContainer: {
-    width: "80%",
+    // width: "80%",
     backgroundColor: "white",
     paddingHorizontal: 20,
     paddingVertical: 30,
     borderRadius: 4,
+    marginVertical: 30,
     elevation: 20,
   },
 });

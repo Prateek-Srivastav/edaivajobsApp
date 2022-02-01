@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 5,
     color: Colors.black,
+    fontFamily: "OpenSans-Regular",
   },
   inputContainer: {
     // flex: 1,

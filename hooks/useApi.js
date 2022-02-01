@@ -13,11 +13,17 @@ function useApi(apiFunc) {
 
     if (!response.ok) {
       console.log(response, "res !ok");
-      if (response.problem === "NETWORK_ERROR") return setNetworkError(true);
-      else if (response.data.code === "token_not_valid")
+      if (response.problem === "NETWORK_ERROR") {
+        setLoading(false);
+        return setNetworkError(true);
+      } else if (response.data.code === "token_not_valid") {
+        setLoading(false);
+        console.log("token not valid");
         return setTokenValid(false);
-      else return setError(true);
-      setLoading(false);
+      } else {
+        setLoading(false);
+        return setError(true);
+      }
     }
 
     setData(response.data);

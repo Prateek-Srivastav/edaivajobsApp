@@ -6,10 +6,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 import AppPicker from "./AppPicker";
 import Colors from "../constants/Colors";
 
-function DatePicker({ onDateChange, minDate }) {
+function DatePicker({ onDateChange, minDate, label, value }) {
   const [show, setShow] = useState(false);
   const [initialDate, setInitialDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState();
+  const [selectedDate, setSelectedDate] = useState("Date");
 
   const onChange = (event, date) => {
     let day = date.getDate();
@@ -26,12 +26,13 @@ function DatePicker({ onDateChange, minDate }) {
   return (
     <>
       <AppPicker
-        titleStyle={selectedDate ? styles.dateTimeText : ""}
+        label={label}
+        // titleStyle={selectedDate ? styles.dateTimeText : ""}
         onPress={() => {
           setShow(true);
         }}
         icon={<MaterialIcons name="date-range" size={17} color="#817E7E" />}
-        title={selectedDate ? selectedDate : "Date"}
+        title={value ? value : selectedDate}
       />
       {show && (
         <DateTimePicker

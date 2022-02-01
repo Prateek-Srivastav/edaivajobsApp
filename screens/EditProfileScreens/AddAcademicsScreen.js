@@ -9,12 +9,6 @@ import Colors from "../../constants/Colors";
 import CustomButton from "../../components/CustomButton";
 
 function AddAcademicsScreen(props) {
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
-  const [selectedBirthDate, setSelectedBirthDate] = useState();
-  const [origin, setOrigin] = useState("");
-
   return (
     <View style={styles.container}>
       <CardInput label="Institute/College/University" placeholder="xyz" />

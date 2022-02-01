@@ -35,13 +35,23 @@ const DetailHeading = ({ label, onPress }) => (
 );
 
 function PersonalDetails({ data, onPress }) {
-  const { email, mobile, dob, address1, address2, city, state, country } = data;
+  const {
+    email,
+    mobile,
+    dob,
+    address1,
+    address2,
+    city,
+    state,
+    country,
+    pincode,
+  } = data;
 
   const address = `${address1 !== "" ? address1 + ", " : ""}${
     address2 !== "" ? address2 + ", " : ""
   }${city !== "" ? city + ", " : ""}${state !== "" ? state + ", " : ""}${
-    country !== "" ? country : ""
-  }`;
+    country !== "" ? country + ", " : ""
+  }${pincode !== "" ? pincode : ""}`;
 
   return (
     <View style={{ marginHorizontal: 15 }}>

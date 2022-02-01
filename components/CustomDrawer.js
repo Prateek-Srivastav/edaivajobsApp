@@ -17,7 +17,6 @@ import {
 import AuthContext from "../auth/context";
 import authStorage from "../auth/storage";
 import cache from "../utilities/cache";
-import { setStatusBarNetworkActivityIndicatorVisible } from "expo-status-bar";
 
 const NormalText = (props) => (
   <Text style={styles.normalText}>{props.children}</Text>
