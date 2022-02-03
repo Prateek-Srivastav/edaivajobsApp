@@ -11,7 +11,7 @@ import locationApi from "../../api/location";
 import userApi from "../../api/user";
 import candidateApi from "../../api/candidate";
 import useApi from "../../hooks/useApi";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const validationSchema = Yup.object().shape({
   firstname: Yup.string().required().label("First Name"),
@@ -95,8 +95,7 @@ function PersonalDetailsScreen({ data: profileData }) {
       lastname: values.lastname,
     });
     updateProfile(profileData.id, val);
-    console.log(val);
-    navigation.goBack();
+    navigation.navigate("EditProfile");
   };
 
   return (
@@ -161,7 +160,7 @@ function PersonalDetailsScreen({ data: profileData }) {
 
         <AppPicker
           selectedItem={country}
-          onSelectItem={async (item) => {
+          onSelectItem={(item) => {
             setCountry(item.name);
             setCountryError(false);
             loadStates(item.name);
@@ -190,7 +189,7 @@ function PersonalDetailsScreen({ data: profileData }) {
         <ErrorMessage error="State is required" visible={stateError} />
 
         <AppFormCardInput
-          value={city !== "" ? city : ""}
+          defaultValue={city !== "" ? city : ""}
           name="city"
           placeholder="City"
         />

@@ -18,7 +18,7 @@ function AppPicker(props) {
   const [visible, setVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
 
-  const { items, onSelectItem } = props;
+  const { dateTimePicker, items, onSelectItem, onPress, disabled } = props;
 
   return (
     <View
@@ -39,8 +39,9 @@ function AppPicker(props) {
         </AppText>
       )}
       <TouchableOpacity
+        disabled={disabled}
         onPress={() => {
-          // onPress();
+          if (onPress) onPress();
           setVisible(true);
         }}
         activeOpacity={0.8}
@@ -59,32 +60,36 @@ function AppPicker(props) {
           />
         )}
       </TouchableOpacity>
-      <CustomAlert modalWidth="90%" visible={visible}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setVisible(false)}
-        >
-          <Feather name="x" size={24} color={Colors.black} />
-        </TouchableOpacity>
-        {props.loading && <Loading />}
-        <FlatList
-          data={items}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => {
-            return (
-              <PickerItem
-                label={item.name}
-                selected={selectedItem}
-                onPress={() => {
-                  setSelectedItem(item.name);
-                  onSelectItem(item);
-                  setVisible(false);
-                }}
-              />
-            );
-          }}
-        />
-      </CustomAlert>
+      {dateTimePicker ? null : (
+        <CustomAlert modalWidth="90%" visible={visible}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setVisible(false)}
+          >
+            <Feather name="x" size={24} color={Colors.black} />
+          </TouchableOpacity>
+          {props.loading && <Loading />}
+          <FlatList
+            data={items}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item }) => {
+              if (item.name === null) return;
+
+              return (
+                <PickerItem
+                  label={item.name}
+                  selected={selectedItem}
+                  onPress={() => {
+                    setSelectedItem(item.name);
+                    onSelectItem(item);
+                    setVisible(false);
+                  }}
+                />
+              );
+            }}
+          />
+        </CustomAlert>
+      )}
     </View>
   );
 }

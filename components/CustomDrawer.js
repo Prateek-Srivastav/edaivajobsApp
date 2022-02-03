@@ -82,7 +82,7 @@ function CustomDrawer(props) {
         <NavigatorButton
           title="Profile"
           icon={<Profile />}
-          onPress={() => props.navigation.navigate("Profile")}
+          onPress={() => props.navigation.navigate("ProfileStack")}
         />
         <NavigatorButton
           title="Preference"

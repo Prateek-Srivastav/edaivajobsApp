@@ -5,10 +5,21 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 import AppPicker from "./AppPicker";
 import Colors from "../constants/Colors";
+import { setLocale } from "yup";
 
-function DatePicker({ onDateChange, minDate, label, value }) {
+function DatePicker({
+  disabled,
+  onDateChange,
+  minDate,
+  label,
+  value,
+  style,
+  initialDate,
+}) {
   const [show, setShow] = useState(false);
-  const [initialDate, setInitialDate] = useState(new Date());
+  const [initDate, setInitDate] = useState(
+    initialDate ? new Date(initialDate) : new Date()
+  );
   const [selectedDate, setSelectedDate] = useState("Date");
 
   const onChange = (event, date) => {
@@ -18,18 +29,22 @@ function DatePicker({ onDateChange, minDate, label, value }) {
     if (day <= 9) day = "0" + day;
     if (month < 10) month = "0" + month;
 
-    setSelectedDate(day + "/" + month + "/" + date.getFullYear());
-    setInitialDate(date);
     setShow(false);
+    setSelectedDate(day + "/" + month + "/" + date.getFullYear());
+    setInitDate(date);
+    onDateChange(day + "/" + month + "/" + date.getFullYear(), date);
   };
 
   return (
     <>
       <AppPicker
+        disabled={disabled}
+        style={style}
         label={label}
+        dateTimePicker
         // titleStyle={selectedDate ? styles.dateTimeText : ""}
         onPress={() => {
-          setShow(true);
+          if (!disabled) setShow(true);
         }}
         icon={<MaterialIcons name="date-range" size={17} color="#817E7E" />}
         title={value ? value : selectedDate}
@@ -38,12 +53,11 @@ function DatePicker({ onDateChange, minDate, label, value }) {
         <DateTimePicker
           testID="timePicker"
           minimumDate={minDate !== undefined ? minDate : new Date()}
-          value={initialDate}
+          value={initDate}
           mode="date"
           display="default"
           onChange={(event, date) => {
             onChange(event, date);
-            onDateChange(date);
           }}
         />
       )}

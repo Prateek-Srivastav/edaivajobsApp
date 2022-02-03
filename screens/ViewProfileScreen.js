@@ -11,28 +11,28 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 
-import cache from "../../utilities/cache";
-import candidateApi from "../../api/candidate";
-import Card from "../../components/Card";
-import CardInput from "../../components/CardInput";
-import Colors from "../../constants/Colors";
-import Error from "../../components/Error";
-import NetworkError from "../../components/NetworkError";
-import useApi from "../../hooks/useApi";
-import Loading from "../../components/Loading";
-import PersonalDetails from "../../components/profileDetails/PersonalDetails";
-import ViewAbout from "../../components/profileDetails/ViewAbout";
-import ExperienceDetails from "../../components/profileDetails/ExperienceDetails";
-import refreshAccessToken from "../../utilities/refreshAccessToken";
-import { Pencil } from "../../assets/svg/icons";
-import AcademicDetails from "../../components/profileDetails/AcademicDetails";
-import SkillDetails from "../../components/profileDetails/SkillDetails";
-import ProjectDetails from "../../components/profileDetails/ProjectDetails";
-import CertificationDetails from "../../components/profileDetails/CertificationDetails";
-import AchievementDetails from "../../components/profileDetails/AchievementDetails";
-import PublicationDetails from "../../components/profileDetails/PublicationDetails";
-import PatentDetails from "../../components/profileDetails/PatentDetails";
-import SocialLinkDetails from "../../components/profileDetails/SocialLinkDetails";
+import cache from "../utilities/cache";
+import candidateApi from "../api/candidate";
+import Card from "../components/Card";
+import CardInput from "../components/CardInput";
+import Colors from "../constants/Colors";
+import Error from "../components/Error";
+import NetworkError from "../components/NetworkError";
+import useApi from "../hooks/useApi";
+import Loading from "../components/Loading";
+import PersonalDetails from "../components/profileDetails/PersonalDetails";
+import ViewAbout from "../components/profileDetails/ViewAbout";
+import ExperienceDetails from "../components/profileDetails/ExperienceDetails";
+import refreshAccessToken from "../utilities/refreshAccessToken";
+import { Pencil } from "../assets/svg/icons";
+import AcademicDetails from "../components/profileDetails/AcademicDetails";
+import SkillDetails from "../components/profileDetails/SkillDetails";
+import ProjectDetails from "../components/profileDetails/ProjectDetails";
+import CertificationDetails from "../components/profileDetails/CertificationDetails";
+import AchievementDetails from "../components/profileDetails/AchievementDetails";
+import PublicationDetails from "../components/profileDetails/PublicationDetails";
+import PatentDetails from "../components/profileDetails/PatentDetails";
+import SocialLinkDetails from "../components/profileDetails/SocialLinkDetails";
 
 const { width, height } = Dimensions.get("window");
 
@@ -48,7 +48,7 @@ const LargeText = (props) => (
   <Text style={styles.largeText}>{props.children}</Text>
 );
 
-function EditProfileScreen() {
+function ViewProfileScreen() {
   const [user, setUser] = useState({});
   const [aboutFocused, setAboutFocused] = useState(false);
   const [about, setAbout] = useState();
@@ -104,17 +104,6 @@ function EditProfileScreen() {
       }}
     >
       <SmallText>{label}</SmallText>
-
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        {/* <View style={styles.buttonContainer}> */}
-        <TouchableOpacity onPress={onPress}>
-          <View style={styles.button}>
-            <Pencil />
-          </View>
-        </TouchableOpacity>
-
-        {/* </View> */}
-      </View>
     </View>
   );
 
@@ -129,23 +118,6 @@ function EditProfileScreen() {
         >
           <SmallText>{props.label}</SmallText>
           {props.children}
-          <TouchableOpacity
-            onPress={props.onPress}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 10,
-              marginBottom: 5,
-            }}
-          >
-            <AntDesign
-              name="plus"
-              size={17}
-              color={Colors.primary}
-              style={{ marginRight: 10 }}
-            />
-            <NormalText>Add {props.label}</NormalText>
-          </TouchableOpacity>
         </View>
         {!props.isNotLine && <View style={styles.line} />}
       </>
@@ -169,7 +141,7 @@ function EditProfileScreen() {
         }}
       >
         <Image
-          source={require("../../assets/dummyDP.png")}
+          source={require("../assets/dummyDP.png")}
           style={{ height: 70, width: 70, marginRight: 5, marginLeft: 8 }}
         />
         <View style={{ width: "70%", marginRight: 5 }}>
@@ -184,188 +156,96 @@ function EditProfileScreen() {
         </View>
       </View>
       <ScrollView>
-        <PersonalDetails
-          data={data}
-          onPress={() =>
-            navigation.navigate("EditProfileDetail", {
-              component: "personal",
-              data,
-            })
-          }
-        />
+        <PersonalDetails data={data} viewing />
 
         <View style={{ ...styles.line, marginTop: 15 }} />
         <View style={{ marginHorizontal: 15 }}>
-          <DetailHeading
-            label="About"
-            onPress={() => setAboutFocused(!aboutFocused)}
-          />
-          {!aboutFocused ? (
-            aboutUpdateLoading ? (
-              <Loading />
-            ) : (
-              <ViewAbout data={about ? about : data.description} />
-            )
-          ) : (
-            <CardInput
-              // style={{ marginBottom: 10 }}
-              numberOfLines={6}
-              multiline
-              placeholder="Tell something about you..."
-              defaultValue={about ? about : data.description}
-              onBlur={handleAboutSubmit}
-              onChangeText={(text) => setAbout(text)}
-              onSubmitEditing={handleAboutSubmit}
-            />
-          )}
+          <DetailHeading label="About" />
+
+          <ViewAbout data={data.description} />
         </View>
         <View style={styles.line} />
-        <AddDetails
-          label="Experience"
-          onPress={() =>
-            navigation.navigate("EditProfileDetail", {
-              component: "exp",
-              data: data,
-            })
-          }
-        >
+        <AddDetails label="Experience">
           {data.experience.map((exp) => (
             <ExperienceDetails
               experience={exp}
               data={data}
               index={data.experience.indexOf(exp)}
+              viewing
             />
           ))}
         </AddDetails>
-        <AddDetails
-          label="Academics"
-          onPress={() =>
-            navigation.navigate("EditProfileDetail", {
-              component: "acad",
-              data,
-            })
-          }
-        >
+        <AddDetails label="Academics">
           {data.qualification.map((qual) => (
             <AcademicDetails
               academic={qual}
               data={data}
               index={data.qualification.indexOf(qual)}
+              viewing
             />
           ))}
         </AddDetails>
-        <AddDetails
-          label="Skills"
-          onPress={() =>
-            navigation.navigate("EditProfileDetail", {
-              component: "skills",
-              data,
-            })
-          }
-        >
+        <AddDetails label="Skills">
           {data.skills.map((skill) => (
             <SkillDetails
               skill={skill}
               data={data}
               index={data.skills.indexOf(skill)}
+              viewing
             />
           ))}
         </AddDetails>
-        <AddDetails
-          label="Projects"
-          onPress={() =>
-            navigation.navigate("EditProfileDetail", {
-              component: "projs",
-              data,
-            })
-          }
-        >
+        <AddDetails label="Projects">
           {data.projects.map((project) => (
             <ProjectDetails
               project={project}
               data={data}
               index={data.projects.indexOf(project)}
+              viewing
             />
           ))}
         </AddDetails>
-        <AddDetails
-          label="Certifications"
-          onPress={() =>
-            navigation.navigate("EditProfileDetail", {
-              component: "certs",
-              data,
-            })
-          }
-        >
+        <AddDetails label="Certifications">
           {data.certifications.map((certification) => (
             <CertificationDetails
               certification={certification}
               data={data}
               index={data.certifications.indexOf(certification)}
+              viewing
             />
           ))}
         </AddDetails>
-        <AddDetails
-          label="Publications"
-          onPress={() =>
-            navigation.navigate("EditProfileDetail", {
-              component: "pubs",
-              data,
-            })
-          }
-        >
+        <AddDetails label="Publications">
           {data.publications.map((publication) => (
             <PublicationDetails
               publication={publication}
               data={data}
               index={data.publications.indexOf(publication)}
+              viewing
             />
           ))}
         </AddDetails>
-        <AddDetails
-          label="Patents"
-          onPress={() =>
-            navigation.navigate("EditProfileDetail", {
-              component: "patents",
-              data,
-            })
-          }
-        >
+        <AddDetails label="Patents">
           {data.patents.map((patent) => (
             <PatentDetails
               patent={patent}
               data={data}
               index={data.patents.indexOf(patent)}
+              viewing
             />
           ))}
         </AddDetails>
-        <AddDetails
-          label="Achievements"
-          onPress={() =>
-            navigation.navigate("EditProfileDetail", {
-              component: "achievements",
-              data,
-            })
-          }
-        >
+        <AddDetails label="Achievements">
           {data.achievements.map((achievement) => (
             <AchievementDetails
               achievement={achievement}
               data={data}
               index={data.achievements.indexOf(achievement)}
+              viewing
             />
           ))}
         </AddDetails>
-        <AddDetails
-          isNotLine
-          label="Social Links"
-          onPress={() =>
-            navigation.navigate("EditProfileDetail", {
-              component: "socialLinks",
-              data,
-            })
-          }
-        >
+        <AddDetails isNotLine label="Social Links">
           <SocialLinkDetails sociallinks={data.sociallinks} />
         </AddDetails>
       </ScrollView>
@@ -432,4 +312,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditProfileScreen;
+export default ViewProfileScreen;

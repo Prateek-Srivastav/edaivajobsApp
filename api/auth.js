@@ -1,4 +1,4 @@
-import client from "./client";
+import { authClient as client } from "./client";
 
 const login = (email, password) =>
   client.post("/user/login/", { email, password });

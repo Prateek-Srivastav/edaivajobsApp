@@ -16,20 +16,30 @@ import PersonalDetailsScreen from "./PersonalDetailsScreen";
 function EditProfileDetailScreen({ route }) {
   const component = route.params.component;
   const data = route.params.data;
+  const index = route.params.index;
+
   let renderScreen;
 
   if (component === "personal")
     renderScreen = <PersonalDetailsScreen data={data} />;
-  else if (component === "exp") renderScreen = <AddExperienceScreen />;
-  else if (component === "acad") renderScreen = <AddAcademicsScreen />;
-  else if (component === "skills") renderScreen = <AddSkillsScreen />;
-  else if (component === "projs") renderScreen = <AddProjectsScreen />;
-  else if (component === "certs") renderScreen = <AddCertificationsScreen />;
-  else if (component === "pubs") renderScreen = <AddPublicationsScreen />;
-  else if (component === "patents") renderScreen = <AddPatentsScreen />;
+  else if (component === "exp")
+    renderScreen = <AddExperienceScreen data={data} index={index} />;
+  else if (component === "acad")
+    renderScreen = <AddAcademicsScreen data={data} index={index} />;
+  else if (component === "skills")
+    renderScreen = <AddSkillsScreen data={data} index={index} />;
+  else if (component === "projs")
+    renderScreen = <AddProjectsScreen data={data} index={index} />;
+  else if (component === "certs")
+    renderScreen = <AddCertificationsScreen data={data} index={index} />;
+  else if (component === "pubs")
+    renderScreen = <AddPublicationsScreen data={data} index={index} />;
+  else if (component === "patents")
+    renderScreen = <AddPatentsScreen data={data} index={index} />;
   else if (component === "achievements")
-    renderScreen = <AddAchievementsScreen />;
-  else if (component === "socialLinks") renderScreen = <AddSocialLinksScreen />;
+    renderScreen = <AddAchievementsScreen data={data} index={index} />;
+  else if (component === "socialLinks")
+    renderScreen = <AddSocialLinksScreen data={data} />;
 
   return <View style={styles.container}>{renderScreen}</View>;
 }

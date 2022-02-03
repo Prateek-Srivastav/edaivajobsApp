@@ -23,3 +23,17 @@ export const formattedDate = (timestamp) => {
 
   return formattedDate;
 };
+
+export const formattedNumericDate = (timestamp) => {
+  let formattedNumeriDate;
+  formattedNumeriDate = new Date(timestamp);
+
+  let day = formattedNumeriDate.getDate();
+  let month = formattedNumeriDate.getMonth() + 1;
+
+  if (day <= 9) day = "0" + day;
+  if (month < 10) month = "0" + month;
+
+  const date = day + "/" + month + "/" + formattedNumeriDate.getFullYear();
+  return date;
+};

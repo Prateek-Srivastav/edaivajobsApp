@@ -44,7 +44,7 @@ function ProfileScreen({ navigation }) {
   useEffect(async () => {
     await loadProfile();
     if (!tokenValid) {
-      refreshAccessToken();
+      await refreshAccessToken();
       await loadProfile();
     }
     const userDetail = await cache.get("user");
@@ -138,6 +138,7 @@ function ProfileScreen({ navigation }) {
               width: "45%",
             }}
             touchable
+            onPress={() => navigation.navigate("ViewProfile")}
           >
             <SimpleLineIcons
               name="share-alt"

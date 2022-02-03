@@ -17,7 +17,7 @@ function AppNavigator() {
       drawerContent={(props) => <CustomDrawer {...props} />}
     >
       <Drawer.Screen name="Home" component={TabNavigator} />
-      <Drawer.Screen name="Profile" component={ProfileNavigator} />
+      <Drawer.Screen name="ProfileStack" component={ProfileNavigator} />
       <Drawer.Screen
         name="Wishlist"
         component={WishlistScreen}

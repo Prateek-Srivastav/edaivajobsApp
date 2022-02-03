@@ -4,12 +4,13 @@ import { Feather, AntDesign } from "@expo/vector-icons";
 
 import AppText from "../AppText";
 import Colors from "../../constants/Colors";
+import { Pencil } from "../../assets/svg/icons";
 
 const SmallText = (props) => (
   <Text style={styles.smallText}>{props.children}</Text>
 );
 
-const DetailHeading = ({ label, onPress }) => (
+const DetailHeading = ({ label, onPress, viewing }) => (
   <View
     style={{
       flexDirection: "row",
@@ -17,24 +18,24 @@ const DetailHeading = ({ label, onPress }) => (
       alignItems: "center",
       // borderWidth: 1,
       width: "100%",
+      marginVertical: 6,
     }}
   >
     <SmallText>{label}</SmallText>
 
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
-      {/* <View style={styles.buttonContainer}> */}
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.button}>
-          <Feather name="edit-3" size={17} color={Colors.primary} />
-        </View>
-      </TouchableOpacity>
-
-      {/* </View> */}
-    </View>
+    {!viewing && (
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <TouchableOpacity onPress={onPress}>
+          <View style={styles.button}>
+            <Pencil />
+          </View>
+        </TouchableOpacity>
+      </View>
+    )}
   </View>
 );
 
-function PersonalDetails({ data, onPress }) {
+function PersonalDetails({ data, onPress, viewing }) {
   const {
     email,
     mobile,
@@ -55,7 +56,11 @@ function PersonalDetails({ data, onPress }) {
 
   return (
     <View style={{ marginHorizontal: 15 }}>
-      <DetailHeading label="Personal Details" onPress={onPress} />
+      <DetailHeading
+        label="Personal Details"
+        onPress={onPress}
+        viewing={viewing}
+      />
       {email && email !== "" ? (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <AppText>EMAIL:{"  "}</AppText>

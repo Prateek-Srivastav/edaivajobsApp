@@ -1,38 +1,114 @@
-import React from "react";
+import React, { useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-import AppPicker from "../../components/AppPicker";
-import CardInput from "../../components/CardInput";
-import CustomButton from "../../components/CustomButton";
-function AddPublicationsScreen(props) {
+import {
+  AppForm,
+  AppFormCardInput,
+  ErrorMessage,
+  SubmitButton,
+} from "../../components/forms";
+import candidateApi from "../../api/candidate";
+import DatePicker from "../../components/DatePicker";
+import { formattedDate, formattedNumericDate } from "../../utilities/date";
+import useApi from "../../hooks/useApi";
+
+function AddPublicationsScreen({ data, index }) {
+  const navigation = useNavigation();
+
+  if (index >= 0) {
+    var {
+      date: prevDate,
+      description,
+      title,
+      link,
+      publisher,
+    } = data.publications[index];
+  }
+
+  const [date, setDate] = useState(prevDate ? formattedDate(prevDate) : null);
+  const [dateError, setDateError] = useState(false);
+
+  const { request: updateProfile } = useApi(candidateApi.updateProfile);
+
+  console.log(data, "AAAAAAAAAAAAAAAAAAAAAAAAAaaa");
+
+  const handleAddSubmit = (values) => {
+    const val = {
+      ...values,
+      date,
+    };
+
+    const publications = [...data.publications, val];
+    console.log(publications);
+    updateProfile(data.id, { publications });
+    navigation.goBack();
+  };
+
+  const handleEditSubmit = (values) => {
+    const val = {
+      ...values,
+      date,
+    };
+
+    const publications = data.publications;
+    publications.splice(index, 1, val);
+    console.log(publications);
+    updateProfile(data.id, { publications });
+    navigation.goBack();
+  };
+
   return (
     <ScrollView
       contentContainerStyle={{ padding: 15 }}
       style={styles.container}
     >
-      <CardInput label="Title" placeholder="xyz" />
-      <AppPicker label="Publisher" title="Select" />
-      <AppPicker
-        label="Publication Date"
-        title="Select Date"
-        icon={<MaterialIcons name="date-range" size={17} color="#817E7E" />}
-      />
-      <CardInput label="Publication URL" placeholder="Paste link here" />
-      <CardInput
-        label="Description"
-        numberOfLines={6}
-        multiline
-        placeholder="Describe your project here..."
-      />
-      <CustomButton
-        title="Add"
-
-        // onPress={() => {
-        //   top.value = withSpring(dimensions.height, SPRING_CONFIG);
-        //   setIsPressed(false);
-        // }}
-      />
+      <AppForm
+        initialValues={{
+          title: title ? title : "",
+          link: link ? link : "",
+          description: description ? description : "",
+          publisher: publisher ? publisher : "",
+        }}
+        onSubmit={index >= 0 ? handleEditSubmit : handleAddSubmit}
+      >
+        <AppFormCardInput
+          name="title"
+          defaultValue={title ? title : ""}
+          label="Title"
+          placeholder="xyz"
+        />
+        <AppFormCardInput
+          name="publisher"
+          defaultValue={publisher ? publisher : ""}
+          label="Publisher"
+          title="Select"
+        />
+        <DatePicker
+          label="Publication Date"
+          initialDate={prevDate}
+          minDate={null}
+          onDateChange={(date, timestamp) => {
+            setDate(timestamp);
+          }}
+          value={prevDate ? formattedNumericDate(prevDate) : null}
+        />
+        <AppFormCardInput
+          name="link"
+          defaultValue={link ? link : ""}
+          label="Publication URL"
+          placeholder="Paste link here"
+        />
+        <AppFormCardInput
+          name="description"
+          defaultValue={description ? description : ""}
+          label="Description"
+          numberOfLines={6}
+          multiline
+          placeholder="Describe your project here..."
+        />
+        <SubmitButton title={index >= 0 ? "Save" : "Add"} />
+      </AppForm>
     </ScrollView>
   );
 }

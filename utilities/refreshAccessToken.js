@@ -2,6 +2,7 @@ import authStorage from "../auth/storage";
 import refreshTokenApi from "../api/refreshToken";
 
 async function refreshAccessToken() {
+  console.log("entered");
   const authToken = await authStorage.getToken();
 
   const response = await refreshTokenApi.refreshToken({
@@ -10,7 +11,7 @@ async function refreshAccessToken() {
   const { access, refresh } = response.data;
   console.log(access);
   authStorage.removeToken();
-  authStorage.storeToken(access, refresh);
+  return authStorage.storeToken(access, refresh);
 }
 
 export default refreshAccessToken;

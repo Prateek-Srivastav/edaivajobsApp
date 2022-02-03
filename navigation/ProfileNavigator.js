@@ -11,6 +11,7 @@ import EditProfileDetailScreen from "../screens/EditProfileScreens/EditProfileDe
 import Colors from "../constants/Colors";
 import ProfileScreen from "../screens/ProfileScreen";
 import EditProfileScreen from "../screens/EditProfileScreens/EditProfileScreen";
+import ViewProfileScreen from "../screens/ViewProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -101,6 +102,28 @@ const ProfileNavigator = () => (
             }}
           >
             Profile
+          </Text>
+        ),
+        headerRight: rightMenuHeader,
+      }}
+    />
+    <Stack.Screen
+      name="ViewProfile"
+      component={ViewProfileScreen}
+      options={{
+        //   headerShadowVisible: false,
+        // headerShown: false,
+        // headerStyle: { backgroundColor: "#FDFDFD" },
+        // headerRight: () => rightshareHeader(),
+        headerTitle: () => (
+          <Text
+            style={{
+              fontFamily: "OpenSans-SemiBold",
+              color: Colors.primary,
+              fontSize: 20,
+            }}
+          >
+            View Profile
           </Text>
         ),
         headerRight: rightMenuHeader,
