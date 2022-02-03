@@ -9,11 +9,7 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
-import {
-  FontAwesome,
-  MaterialCommunityIcons,
-  Ionicons,
-} from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RenderHtml, { defaultSystemFonts } from "react-native-render-html";
 
 import AppModal from "../components/AppModal";
@@ -24,10 +20,10 @@ import Card from "../components/Card";
 import Colors from "../constants/Colors";
 import CustomButton from "../components/CustomButton";
 import jobsApi from "../api/jobs";
-import useApi from "../hooks/useApi";
 import { formattedDate } from "../utilities/date";
 
 import dummyJobDetails from "../dummyData.js/dummyJobDetails";
+import cache from "../utilities/cache";
 
 const { width, height } = Dimensions.get("window");
 
@@ -78,7 +74,44 @@ function JobDetailScreen({ route }) {
     loadJobDetails(jobId);
   }, []);
 
-  // let jobDetails = dummyJobDetails;
+  const [inWishlist, setInWishlist] = useState(false);
+
+  const wishlistStatus = async () => {
+    const wishlist = await cache.get("wishlist");
+    const status = wishlist.find((job) => job.id === jobDetails._id);
+    if (status) return setInWishlist(true);
+    else return setInWishlist(false);
+  };
+  wishlistStatus();
+
+  const addToWishlist = async () => {
+    if (route.params.isApplied) return;
+
+    const wl = await cache.get("wishlist");
+
+    cache.store("wishlist", [
+      ...wl,
+      {
+        title: jobDetails.job_title,
+        company: jobDetails.company.name,
+        id: jobDetails._id,
+      },
+    ]);
+    setInWishlist(true);
+  };
+
+  const removeFromWishlist = async () => {
+    const wl = await cache.get("wishlist");
+
+    wl.find((job, index) => {
+      if (job.id === jobDetails._id) {
+        wl.splice(index, 1);
+        return true;
+      }
+    });
+    cache.store("wishlist", [...wl]);
+    setInWishlist(false);
+  };
 
   const getData = (val) => {
     setIsPressed(false);
@@ -150,7 +183,7 @@ function JobDetailScreen({ route }) {
               baseStyle={{
                 fontFamily: "OpenSans-Regular",
                 fontSize: 14.5,
-                color: Colors.primary,
+                color: Colors.black,
               }}
             />
             <AppText>Preferred Qualification</AppText>
@@ -407,19 +440,24 @@ function JobDetailScreen({ route }) {
             padding: 4,
             marginRight: 10,
           }}
+          onPress={inWishlist ? removeFromWishlist : addToWishlist}
         >
           <MaterialCommunityIcons
-            name="bookmark-minus-outline"
+            name={
+              inWishlist || inWishlist === undefined
+                ? "bookmark-minus"
+                : "bookmark-minus-outline"
+            }
             size={24}
             color={Colors.primary}
           />
         </TouchableOpacity>
         <CustomButton
-          disabled={jobDetails.isApplied}
+          disabled={route.params.isApplied}
           onPress={() => {
             setIsPressed(true);
           }}
-          title={jobDetails.isApplied ? "Applied" : "Apply"}
+          title={route.params.isApplied ? "Applied" : "Apply"}
           style={{ marginVertical: 0 }}
         />
       </View>

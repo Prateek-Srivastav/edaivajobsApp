@@ -19,13 +19,13 @@ const ApplicationStatus = ({ applicationStatus }) => {
     primaryColor = "#E97E00";
     text = "Interviewing";
   } else if (
-    applicationStatus === "shortlisted" ||
-    applicationStatus === "underReview" ||
+    // applicationStatus === "shortlisted" ||
+    // applicationStatus === "underReview" ||
     applicationStatus === "applied"
   ) {
-    bgColor = "#FDFF9870";
-    primaryColor = "#AEB11c";
-    text = "Short Listed";
+    bgColor = "#CBF1FF4D";
+    primaryColor = Colors.primary;
+    text = "Applied";
   } else if (applicationStatus === "hired") {
     bgColor = "#BEFFA74D";
     primaryColor = "#2D811F";
@@ -81,7 +81,7 @@ function ApplicationNavigator() {
           headerRight: () => {
             return (
               <ApplicationStatus
-                applicationStatus={route.params.itemData.item.applicationStatus}
+                applicationStatus={route.params.applicationStatus}
               />
             );
           },

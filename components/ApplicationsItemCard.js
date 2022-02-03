@@ -171,7 +171,7 @@ const ApplicationItemCard = (props) => {
                 Applied on:{" "}
               </AppText>
               <AppText style={{ color: "#ccc", fontSize: 12 }}>
-                Jan 14, 2021
+                {props.appliedOn}
               </AppText>
             </View>
             <ApplicationStatus applicationStatus={props.applicationStatus} />

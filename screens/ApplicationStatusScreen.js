@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -8,15 +8,17 @@ import {
   Animated,
   Dimensions,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
 
 import AppModal from "../components/AppModal";
 import AppText from "../components/AppText";
 import Card from "../components/Card";
 import Colors from "../constants/Colors";
+import jobsApi from "../api/jobs";
 import JobDetails from "../components/JobDetails";
 import { BuildingIcon, Location, Share } from "../assets/svg/icons";
 import RescheduleModalContent from "../components/RescheduleModalContent";
+import useApi from "../hooks/useApi";
+import Loading from "../components/Loading";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -27,7 +29,23 @@ function ApplicationStatusScreen({ route }) {
   // const { width } = Dimensions.get("screen");
   const [position] = useState(new Animated.ValueXY());
 
-  const item = route.params.itemData.item;
+  const jobId = route.params.jobId;
+
+  const applicationStatus = route.params.applicationStatus;
+
+  const {
+    data,
+    error,
+    networkError,
+    loading,
+    request: loadJobDetails,
+  } = useApi(jobsApi.getJobDetails);
+
+  useEffect(() => {
+    loadJobDetails(jobId);
+  }, []);
+
+  if (loading) return <Loading />;
 
   const getData = (val) => {
     setIsPressed(false);
@@ -46,11 +64,11 @@ function ApplicationStatusScreen({ route }) {
     let color;
     let message;
 
-    if (item.applicationStatus === "underReview") {
+    if (applicationStatus === "underReview") {
       color = "#AEB11c";
       message =
         "Congratulations, you have successfully quaified for this position.";
-    } else if (item.applicationStatus === "rejected") {
+    } else if (applicationStatus === "rejected") {
       color = "#F11212";
       message =
         "We are sorry to inform you that you are not eligible for this position.";
@@ -62,7 +80,7 @@ function ApplicationStatusScreen({ route }) {
   };
 
   const InterviewDetail = () => {
-    if (item.applicationStatus === "interviewing") {
+    if (applicationStatus === "interviewing") {
       return (
         <View
           style={{
@@ -251,7 +269,7 @@ function ApplicationStatusScreen({ route }) {
       detail = <InterviewDetail />;
       animate(width / 5);
     } else if (show === 2) {
-      detail = <JobDetails />;
+      detail = <JobDetails data={data} />;
       animate(3 * (width / 5));
     }
 
@@ -280,7 +298,7 @@ function ApplicationStatusScreen({ route }) {
     );
   };
 
-  return (
+  return !loading && data ? (
     <View style={styles.container}>
       <View
         style={{
@@ -290,7 +308,7 @@ function ApplicationStatusScreen({ route }) {
         }}
       >
         <Card style={styles.card}>
-          <Text style={styles.heading}>{item.heading}</Text>
+          <Text style={styles.heading}>{data.job_title}</Text>
 
           <View
             style={{
@@ -301,12 +319,12 @@ function ApplicationStatusScreen({ route }) {
           >
             <BuildingIcon color="#BDEEFF" />
 
-            <Text style={styles.text}>{item.companyName}</Text>
+            <Text style={styles.text}>{data.company.name}</Text>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Location color="#BDEEFF" />
 
-            <Text style={styles.text}>{item.location}</Text>
+            <Text style={styles.text}>{route.params.location}</Text>
           </View>
           <StatusMessage />
           <View
@@ -351,6 +369,8 @@ function ApplicationStatusScreen({ route }) {
         <RescheduleModalContent />
       </AppModal>
     </View>
+  ) : (
+    <Loading />
   );
 }
 

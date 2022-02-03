@@ -7,6 +7,7 @@ import ProfileNavigator from "./ProfileNavigator";
 import TabNavigator from "./TabNavigator";
 import WishlistScreen from "../screens/WishlistScreen";
 import CustomDrawer from "../components/CustomDrawer";
+import WishlistNavigator from "./WishlistNavigator";
 
 const Drawer = createDrawerNavigator();
 
@@ -19,17 +20,17 @@ function AppNavigator() {
       <Drawer.Screen name="Home" component={TabNavigator} />
       <Drawer.Screen name="ProfileStack" component={ProfileNavigator} />
       <Drawer.Screen
-        name="Wishlist"
-        component={WishlistScreen}
-        options={{
-          headerShown: true,
-          headerLeft: () => null,
-          headerTitleStyle: {
-            fontFamily: "OpenSans-SemiBold",
-            color: Colors.primary,
-            fontSize: 20,
-          },
-        }}
+        name="WishlistStack"
+        component={WishlistNavigator}
+        // options={{
+        //   // headerShown: true,
+        //   // headerLeft: () => null,
+        //   headerTitleStyle: {
+        //     fontFamily: "OpenSans-SemiBold",
+        //     color: Colors.primary,
+        //     fontSize: 20,
+        //   },
+        // }}
       />
     </Drawer.Navigator>
   );

@@ -1,11 +1,45 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FlatList, View, StyleSheet } from "react-native";
 
 import ApplicationItemCard from "../components/ApplicationsItemCard";
+import applicationApi from "../api/application";
 import Colors from "../constants/Colors";
 import dummyData from "../dummyData.js/data";
+import { formattedDate } from "../utilities/date";
+import useApi from "../hooks/useApi";
+import { useIsFocused } from "@react-navigation/native";
+import NetworkError from "../components/NetworkError";
+import Error from "../components/Error";
+import Loading from "../components/Loading";
 
 function ApplicationsScreen({ navigation }) {
+  const isFocused = useIsFocused();
+
+  const {
+    data,
+    error,
+    networkError,
+    loading,
+    request: loadApplications,
+  } = useApi(applicationApi.getApplications);
+
+  let applications;
+
+  if (data) {
+    applications = data;
+  }
+
+  useEffect(() => {
+    loadApplications();
+  }, [isFocused]);
+
+  if (loading) return <Loading />;
+
+  if (networkError && !loading)
+    return <NetworkError onPress={loadApplications} />;
+
+  if (error) return <Error onPress={loadApplications} />;
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -13,22 +47,33 @@ function ApplicationsScreen({ navigation }) {
           paddingHorizontal: 15,
           paddingBottom: 20,
         }}
-        data={dummyData}
-        renderItem={(itemData) => (
-          <ApplicationItemCard
-            onPress={() =>
-              navigation.navigate("ApplicationStatus", { itemData })
-            }
-            heading={itemData.item.heading}
-            companyName={itemData.item.companyName}
-            jobType={itemData.item.jobType}
-            location={itemData.item.location}
-            description={itemData.item.description}
-            postedDate={itemData.item.postedDate}
-            isApplied={itemData.item.isApplied}
-            applicationStatus={itemData.item.applicationStatus}
-          />
-        )}
+        data={applications}
+        renderItem={(itemData) => {
+          const { city, state, country } = itemData.item.job.job_location[0];
+
+          const location = `${city}, ${state}, ${country}`;
+
+          const { job_title, company, job_type, created_on, job_description } =
+            itemData.item.job;
+
+          return (
+            <ApplicationItemCard
+              onPress={() =>
+                navigation.navigate("ApplicationStatus", {
+                  jobId: itemData.item.job._id.$oid,
+                  location,
+                  applicationStatus: itemData.item.status,
+                })
+              }
+              heading={job_title}
+              companyName={company[0].name}
+              location={location}
+              appliedOn={formattedDate(itemData.item.date_applied.$date)}
+              // isApplied={itemData.job.company.item.applied}
+              applicationStatus={itemData.item.status}
+            />
+          );
+        }}
       />
     </View>
   );

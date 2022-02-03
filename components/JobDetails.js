@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
@@ -7,29 +7,51 @@ import {
   TouchableOpacity,
   Animated,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import {
   FontAwesome,
   MaterialCommunityIcons,
   Ionicons,
 } from "@expo/vector-icons";
+import RenderHtml, { defaultSystemFonts } from "react-native-render-html";
 
 import AppModal from "../components/AppModal";
+import ApplicationModalContent from "../components/ApplicationModalContent";
+import { BuildingIcon, Location } from "../assets/svg/icons";
 import AppText from "../components/AppText";
 import Card from "../components/Card";
 import Colors from "../constants/Colors";
+import CustomButton from "../components/CustomButton";
+import jobsApi from "../api/jobs";
+import useApi from "../hooks/useApi";
+import { formattedDate } from "../utilities/date";
 import dummyData from "../dummyData.js/data";
 
 const { width, height } = Dimensions.get("screen");
 
-function JobDetails({ route }) {
+const NormalText = ({ children }) => (
+  <Text
+    style={{
+      color: Colors.black,
+      fontFamily: "OpenSans-Regular",
+      fontSize: 14.5,
+      marginTop: 5,
+      marginBottom: 10,
+    }}
+  >
+    {children}
+  </Text>
+);
+
+function JobDetails({ data: jobDetails }) {
   const [showDetail, setShowDetail] = useState(1);
   const [isPressed, setIsPressed] = useState(false);
 
   // const { width } = Dimensions.get("screen");
   const [position] = useState(new Animated.ValueXY());
 
-  const item = dummyData[1];
+  // const data = dummyData[1];
 
   const getData = (val) => {
     setIsPressed(false);
@@ -45,6 +67,8 @@ function JobDetails({ route }) {
   };
 
   const Description = ({ show }) => {
+    const systemFonts = [...defaultSystemFonts, "OpenSans-Regular"];
+
     const animate = (value) => {
       Animated.timing(position, {
         toValue: { x: value, y: 0 },
@@ -55,159 +79,208 @@ function JobDetails({ route }) {
 
     let detail;
     if (show === 1) {
-      detail = item.description;
+      detail = jobDetails.job_description;
       animate(width / 20);
     } else if (show === 2) {
-      detail = item.responsibility;
+      detail = jobDetails.job_requirements;
       animate(width / 2.4);
     } else if (show === 3) {
-      detail = item.more;
-      animate(width / 1.3);
+      detail = jobDetails.preferred_qualification;
+      animate(width / 1.44);
     }
 
     return (
-      <ScrollView
+      <View
         style={{
-          // paddingHorizontal: 20,
-          paddingBottom: 20,
+          paddingHorizontal: 20,
+          // paddingBottom: 20,
           width: "100%",
-          marginTop: 10,
-          // marginBottom: 10,
+          marginTop: show === 2 ? 0 : 10,
         }}
       >
-        <AppText
-          style={{
-            color: Colors.black,
-            textAlign: "justify",
-          }}
-        >
-          {detail}
-        </AppText>
-      </ScrollView>
+        {show !== 3 ? (
+          <RenderHtml
+            contentWidth={width}
+            source={{
+              html: detail,
+            }}
+            systemFonts={systemFonts}
+            baseStyle={{
+              fontFamily: "OpenSans-Regular",
+              fontSize: 14.5,
+              color: Colors.black,
+            }}
+          />
+        ) : (
+          <>
+            <AppText>Minimum Qualification</AppText>
+            <RenderHtml
+              contentWidth={width}
+              source={{
+                html: jobDetails.minimum_qualification,
+              }}
+              systemFonts={systemFonts}
+              baseStyle={{
+                fontFamily: "OpenSans-Regular",
+                fontSize: 14.5,
+                color: Colors.black,
+              }}
+            />
+            <AppText>Preferred Qualification</AppText>
+            <RenderHtml
+              contentWidth={width}
+              source={{
+                html: jobDetails.preferred_qualification,
+              }}
+              systemFonts={systemFonts}
+              baseStyle={{
+                fontFamily: "OpenSans-Regular",
+                fontSize: 14.5,
+                color: Colors.black,
+              }}
+            />
+            <AppText>Job Supplements</AppText>
+            <NormalText>{jobDetails.job_supplement_pay[0].name}</NormalText>
+            <AppText>Job Schedule</AppText>
+            <NormalText>{jobDetails.job_schedule[0].name}</NormalText>
+            {!jobDetails.salary_undisclosed && jobDetails.salary && (
+              <>
+                <AppText>Salary</AppText>
+                <NormalText>
+                  ₹{jobDetails.salary.salary_from} - ₹
+                  {jobDetails.salary.salary_to} {jobDetails.salary.salary_type}
+                </NormalText>
+              </>
+            )}
+            <AppText>Remote</AppText>
+            <NormalText>{jobDetails.job_remote.name}</NormalText>
+            <AppText>Open Positions</AppText>
+            <NormalText>{jobDetails.no_of_vacancy}</NormalText>
+          </>
+        )}
+      </View>
     );
   };
 
   return (
-    <View style={styles.container}>
-      <View
-        style={{
-          // flex: 1,
-          // borderWidth: 1,
-          width: "100%",
-          // justifyContent: "center",
-          alignItems: "center",
-        }}
+    <View
+      style={{
+        paddingBottom: 10,
+        backgroundColor: Colors.bg,
+      }}
+    >
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={{ alignItems: "center" }}
       >
-        <Card
+        <View
           style={{
-            // marginTop: 20,
-            paddingHorizontal: 13,
-            paddingRight: 3,
-            // marginLeft: 0,
-            alignSelf: "center",
+            // flex: 1,
+            // borderWidth: 1,
+            width: "100%",
+            // justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <View style={styles.cardBlue}>
-            <AppText style={{ color: Colors.primary }}>{item.jobType}</AppText>
-          </View>
-
-          {!item.isApplied && (
-            <View
+          <Card style={styles.card}>
+            <Card
               style={{
-                justifyContent: "center",
-                alignItems: "center",
-                marginHorizontal: 3,
-                marginRight: 7,
+                // marginTop: 20,
+                paddingHorizontal: 13,
+                paddingRight: 3,
+                // marginLeft: 0,
+                alignSelf: "center",
               }}
             >
-              <AppText style={{ fontSize: 12, fontFamily: "OpenSans-Medium" }}>
-                Apply by
-              </AppText>
-              <AppText
+              <View style={styles.cardBlue}>
+                <AppText style={{ color: Colors.primary }}>
+                  {jobDetails.job_type.name}
+                </AppText>
+              </View>
+            </Card>
+            <Card
+              style={{
+                flexDirection: "column",
+                alignSelf: "center",
+                width: "100%",
+                // alignItems: "space-evenly",
+                paddingHorizontal: 30,
+                paddingVertical: 17,
+                // backgroundColor: "blue",
+              }}
+            >
+              <View
                 style={{
-                  fontSize: 12,
-                  fontFamily: "OpenSans-Medium",
-                  color: Colors.primary,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginBottom: 20,
                 }}
               >
-                {item.lastApplicationDate}
-              </AppText>
-            </View>
-          )}
-        </Card>
-        <Card
+                <View>
+                  <AppText style={{ marginBottom: 6 }}>Degree</AppText>
+                  {jobDetails.qualification.map((qual) => (
+                    <AppText style={styles.requirementText} key={qual._id}>
+                      {qual.name}
+                    </AppText>
+                  ))}
+                </View>
+                <View>
+                  <AppText style={{ marginBottom: 6 }}>Work Experience</AppText>
+                  <AppText style={styles.requirementText}>
+                    {jobDetails.job_exp_from}-{jobDetails.job_exp_to} Years
+                  </AppText>
+                </View>
+              </View>
+              <View>
+                <AppText style={{ marginBottom: 6 }}>Required skills</AppText>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {jobDetails.skills.map((skill, index) => (
+                    <AppText style={styles.requirementText} key={index}>
+                      {skill.name}
+                    </AppText>
+                  ))}
+                </View>
+              </View>
+            </Card>
+          </Card>
+        </View>
+        <View
           style={{
-            flexDirection: "column",
-            alignSelf: "center",
             width: "100%",
-            // alignItems: "space-evenly",
-            paddingHorizontal: 30,
-            paddingVertical: 17,
-            marginBottom: 15,
-            // backgroundColor: "blue",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+            marginTop: 5,
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginBottom: 20,
-            }}
-          >
-            <View>
-              <AppText style={{ marginBottom: 6 }}>Degree</AppText>
-              <AppText style={styles.requirementText}>Graduate</AppText>
-              <AppText style={styles.requirementText}>Post graduate</AppText>
-            </View>
-            <View>
-              <AppText style={{ marginBottom: 6 }}>Work Experience</AppText>
-              <AppText style={styles.requirementText}>0-2 Years</AppText>
-            </View>
-          </View>
-          <View>
-            <AppText style={{ marginBottom: 6 }}>Required skills</AppText>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <AppText style={styles.requirementText}>Python </AppText>
-              <AppText style={styles.requirementText}>Angular </AppText>
-              <AppText style={styles.requirementText}>Javascript</AppText>
-            </View>
-          </View>
-        </Card>
-      </View>
-      <View
-        style={{
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <TouchableOpacity onPress={() => setShowDetail(1)}>
-          <AppText style={styles.detailsHeading}>DESCRIPTION</AppText>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowDetail(2)}>
-          <AppText style={styles.detailsHeading}>RESPONSIBILITY</AppText>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setShowDetail(3)}>
-          <AppText style={styles.detailsHeading}>MORE</AppText>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          // borderWidth: 1,
-          width: "85%",
-          // marginHorizontal: 20,
-          marginTop: 3,
-        }}
-      >
-        <Animated.View style={animStyles} />
-      </View>
-      <Description show={showDetail} />
+          <TouchableOpacity onPress={() => setShowDetail(1)}>
+            <AppText style={styles.detailsHeading}>DESCRIPTION</AppText>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowDetail(2)}>
+            <AppText style={styles.detailsHeading}>RESPONSIBILITY</AppText>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowDetail(3)}>
+            <AppText style={styles.detailsHeading}>MORE</AppText>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            // borderWidth: 1,
+            width: "85%",
+            // marginHorizontal: 20,
+            marginTop: 3,
+          }}
+        >
+          <Animated.View style={animStyles} />
+        </View>
+        <Description show={showDetail} />
+      </ScrollView>
     </View>
   );
 }
@@ -240,7 +313,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg,
     // width: width,
     // borderWidth: 1,
-    paddingHorizontal: 15,
+    // paddingBottom: 200,
   },
   detailsHeading: {
     fontFamily: "OpenSans-SemiBold",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   View,
@@ -10,6 +10,7 @@ import { FontAwesome } from "@expo/vector-icons";
 
 import dummyData from "../dummyData.js/data";
 import Colors from "../constants/Colors";
+import cache from "../utilities/cache";
 
 const WishlistItemCard = (props) => (
   <TouchableOpacity
@@ -44,16 +45,29 @@ const WishlistItemCard = (props) => (
 );
 
 function WishlistScreen({ navigation }) {
+  const [wishlist, setWishlist] = useState();
+
+  const wishlistStatus = async () => {
+    const wl = await cache.get("wishlist");
+    return setWishlist(wl);
+  };
+  wishlistStatus();
   return (
     <View style={styles.container}>
       <FlatList
         contentContainerStyle={{ paddingHorizontal: 15, paddingBottom: 10 }}
-        data={dummyData}
+        data={wishlist}
         renderItem={(itemData) => (
           <WishlistItemCard
-            onPress={() => navigation.navigate("JobDetail", { itemData })}
-            heading={itemData.item.heading}
-            companyName={itemData.item.companyName}
+            onPress={() =>
+              navigation.navigate("JobDetail", {
+                jobId: itemData.item.id,
+                // isApplied: itemData.item.applied.length !== 0,
+                // location,
+              })
+            }
+            heading={itemData.item.title}
+            companyName={itemData.item.company}
           />
         )}
       />

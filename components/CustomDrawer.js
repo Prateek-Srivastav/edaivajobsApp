@@ -92,7 +92,7 @@ function CustomDrawer(props) {
         <NavigatorButton
           title="Wishlist"
           icon={<Wishlist />}
-          onPress={() => props.navigation.navigate("Wishlist")}
+          onPress={() => props.navigation.navigate("WishlistStack")}
         />
       </View>
       <HorizontalLine />

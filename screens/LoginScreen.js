@@ -48,6 +48,7 @@ function LoginScreen({ navigation }) {
     setLoginFailed(false);
     const { access, refresh, email_verified, user } = result.data;
 
+    console.log(result.data);
     if (!email_verified) return navigation.navigate("CodeVerification", email);
 
     authContext.setTokens({ access, refresh });

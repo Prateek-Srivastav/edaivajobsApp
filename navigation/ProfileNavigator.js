@@ -58,24 +58,6 @@ const rightMenuHeader = () => {
   );
 };
 
-// const rightRegisterHeader = () => {
-//   const navigation = useNavigation();
-
-//   return (
-//     <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-//       <Text
-//         style={{
-//           fontFamily: "OpenSans-Medium",
-//           fontSize: 16,
-//           color: Colors.primary,
-//         }}
-//       >
-//         Login
-//       </Text>
-//     </TouchableOpacity>
-//   );
-// };
-
 const ProfileNavigator = () => (
   <Stack.Navigator
     screenOptions={{

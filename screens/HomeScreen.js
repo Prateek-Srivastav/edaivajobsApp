@@ -53,7 +53,6 @@ function HomeScreen({ navigation }) {
   const getData = (val) => {
     setIsPressed(false);
   };
-
   if (networkError && !loading) return <NetworkError onPress={loadJobs} />;
 
   if (error) return <Error onPress={loadJobs} />;
@@ -197,7 +196,7 @@ function HomeScreen({ navigation }) {
               }}
             >
               <FlatList
-                keyExtractor={(item, index) => item._id}
+                keyExtractor={(item) => item._id}
                 contentContainerStyle={{
                   paddingHorizontal: 15,
                   paddingBottom: 20,
