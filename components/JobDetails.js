@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -7,26 +7,12 @@ import {
   TouchableOpacity,
   Animated,
   Dimensions,
-  ActivityIndicator,
 } from "react-native";
-import {
-  FontAwesome,
-  MaterialCommunityIcons,
-  Ionicons,
-} from "@expo/vector-icons";
 import RenderHtml, { defaultSystemFonts } from "react-native-render-html";
 
-import AppModal from "../components/AppModal";
-import ApplicationModalContent from "../components/ApplicationModalContent";
-import { BuildingIcon, Location } from "../assets/svg/icons";
 import AppText from "../components/AppText";
 import Card from "../components/Card";
 import Colors from "../constants/Colors";
-import CustomButton from "../components/CustomButton";
-import jobsApi from "../api/jobs";
-import useApi from "../hooks/useApi";
-import { formattedDate } from "../utilities/date";
-import dummyData from "../dummyData.js/data";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -52,10 +38,6 @@ function JobDetails({ data: jobDetails }) {
   const [position] = useState(new Animated.ValueXY());
 
   // const data = dummyData[1];
-
-  const getData = (val) => {
-    setIsPressed(false);
-  };
 
   const animStyles = {
     top: 0,

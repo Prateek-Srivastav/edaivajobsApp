@@ -13,7 +13,7 @@ function DatePicker({
   minDate,
   label,
   value,
-  style,
+  titleStyle,
   initialDate,
 }) {
   const [show, setShow] = useState(false);
@@ -29,17 +29,20 @@ function DatePicker({
     if (day <= 9) day = "0" + day;
     if (month < 10) month = "0" + month;
 
+    const indFormat = day + "/" + month + "/" + date.getFullYear();
+    const usFormat = date.getFullYear() + "-" + month + "-" + day;
+
     setShow(false);
-    setSelectedDate(day + "/" + month + "/" + date.getFullYear());
+    setSelectedDate(indFormat);
     setInitDate(date);
-    onDateChange(day + "/" + month + "/" + date.getFullYear(), date);
+    onDateChange(indFormat, usFormat, date);
   };
 
   return (
     <>
       <AppPicker
         disabled={disabled}
-        style={style}
+        titleStyle={titleStyle}
         label={label}
         dateTimePicker
         // titleStyle={selectedDate ? styles.dateTimeText : ""}

@@ -56,8 +56,6 @@ function AddProjectsScreen({ data, index }) {
 
   const { request: updateProfile } = useApi(candidateApi.updateProfile);
 
-  console.log(index);
-
   const handleAddSubmit = (values) => {
     const val = {
       ...values,
@@ -66,7 +64,7 @@ function AddProjectsScreen({ data, index }) {
     };
 
     const projects = [...data.projects, val];
-    console.log(projects);
+
     updateProfile(data.id, { projects });
     navigation.goBack();
   };
@@ -80,7 +78,7 @@ function AddProjectsScreen({ data, index }) {
 
     const projects = data.projects;
     projects.splice(index, 1, val);
-    console.log(projects);
+
     updateProfile(data.id, { projects });
     navigation.goBack();
   };

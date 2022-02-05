@@ -63,8 +63,6 @@ function AddAcademicsScreen({ data, index }) {
     request: updateProfile,
   } = useApi(candidateApi.updateProfile);
 
-  console.log(index);
-
   const handleAddSubmit = (values) => {
     const val = {
       ...values,
@@ -78,7 +76,7 @@ function AddAcademicsScreen({ data, index }) {
     else if (!startDate) return setStartDateError(true);
 
     const qualification = [...data.qualification, val];
-    console.log(qualification);
+
     updateProfile(data.id, { qualification });
     navigation.goBack();
   };
@@ -97,7 +95,7 @@ function AddAcademicsScreen({ data, index }) {
 
     const qualification = data.qualification;
     qualification.splice(index, 1, val);
-    console.log(qualification);
+
     updateProfile(data.id, { qualification });
     navigation.goBack();
   };
@@ -124,10 +122,8 @@ function AddAcademicsScreen({ data, index }) {
           title={degree ? degree : "Select"}
           items={degrees}
           onSelectItem={(item) => {
-            console.log(item);
             setDegree(item.name);
             setDegreeError(false);
-            console.log(degree);
           }}
         />
         <ErrorMessage error="Degree is required" visible={degreeError} />

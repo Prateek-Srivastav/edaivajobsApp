@@ -9,11 +9,9 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import RenderHtml, { defaultSystemFonts } from "react-native-render-html";
 
-import AppModal from "../components/AppModal";
-import ApplicationModalContent from "../components/ApplicationModalContent";
 import { BuildingIcon, Location } from "../assets/svg/icons";
 import AppText from "../components/AppText";
 import Card from "../components/Card";
@@ -24,6 +22,10 @@ import { formattedDate } from "../utilities/date";
 
 import dummyJobDetails from "../dummyData.js/dummyJobDetails";
 import cache from "../utilities/cache";
+import ApplicationModal from "../components/appmodals/ApplicationModal";
+import { jobClient } from "../api/client";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import user from "../api/user";
 
 const { width, height } = Dimensions.get("window");
 
@@ -45,6 +47,7 @@ function JobDetailScreen({ route }) {
   const [showDetail, setShowDetail] = useState(1);
   const [isPressed, setIsPressed] = useState(false);
   const [position] = useState(new Animated.ValueXY());
+  const [isApplied, setIsApplied] = useState(route.params.isApplied);
 
   const jobId = route.params.jobId;
 
@@ -53,7 +56,6 @@ function JobDetailScreen({ route }) {
   const [error, setError] = useState(false);
   const [networkError, setNetworkError] = useState(false);
 
-  // let jobDetails;
   const loadJobDetails = async (jobId) => {
     setLoading(true);
     const response = await jobsApi.getJobDetails(jobId);
@@ -113,7 +115,8 @@ function JobDetailScreen({ route }) {
     setInWishlist(false);
   };
 
-  const getData = (val) => {
+  const getData = (applied) => {
+    setIsApplied(applied);
     setIsPressed(false);
   };
 
@@ -427,49 +430,71 @@ function JobDetailScreen({ route }) {
           paddingHorizontal: 15,
         }}
       >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={{
-            elevation: 3,
-            height: 40,
-            width: 40,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 3,
-            backgroundColor: "white",
-            padding: 4,
-            marginRight: 10,
-          }}
-          onPress={inWishlist ? removeFromWishlist : addToWishlist}
-        >
-          <MaterialCommunityIcons
-            name={
-              inWishlist || inWishlist === undefined
-                ? "bookmark-minus"
-                : "bookmark-minus-outline"
+        {!isApplied ? (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={{
+              elevation: 3,
+              height: 40,
+              width: 40,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 3,
+              backgroundColor: "white",
+              padding: 4,
+              marginRight: 10,
+            }}
+            onPress={inWishlist ? removeFromWishlist : addToWishlist}
+          >
+            <MaterialCommunityIcons
+              name={
+                inWishlist || inWishlist === undefined
+                  ? "bookmark-minus"
+                  : "bookmark-minus-outline"
+              }
+              size={24}
+              color={Colors.primary}
+            />
+          </TouchableOpacity>
+        ) : (
+          <CustomButton
+            icon={
+              <Entypo name="squared-minus" size={24} color={Colors.primary} />
             }
-            size={24}
-            color={Colors.primary}
+            style={{
+              backgroundColor: "white",
+              // width: "70%",
+              marginRight: 10,
+              elevation: 4,
+              paddingHorizontal: 10,
+              flex: 1.5,
+              justifyContent: "space-evenly",
+            }}
+            title="Revoke Application"
+            titleStyle={{ color: Colors.primary }}
           />
-        </TouchableOpacity>
+        )}
         <CustomButton
-          disabled={route.params.isApplied}
-          onPress={() => {
-            setIsPressed(true);
-          }}
-          title={route.params.isApplied ? "Applied" : "Apply"}
+          disabled={isApplied}
+          onPress={() => setIsPressed(true)}
+          title={isApplied ? "Applied" : "Apply"}
           style={{ marginVertical: 0 }}
         />
       </View>
 
-      <AppModal
+      {/* <AppModal
         numOfButton={1}
         heading="Send Application"
         isPressed={isPressed}
         sendData={getData}
-      >
-        <ApplicationModalContent data={jobDetails} />
-      </AppModal>
+        onApplyPress={handleApply}
+      > */}
+      <ApplicationModal
+        data={jobDetails}
+        isPressed={isPressed}
+        sendData={getData}
+      />
+      {/* </AppModal> */}
     </View>
   );
 }

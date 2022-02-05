@@ -62,7 +62,7 @@ function FilterModalContent(props) {
       <TouchableOpacity
         onPress={() => {
           const index = skillsItemArray.indexOf(skillItem);
-          console.log(index);
+
           skillsItemArray.splice(index, 1);
         }}
         style={{

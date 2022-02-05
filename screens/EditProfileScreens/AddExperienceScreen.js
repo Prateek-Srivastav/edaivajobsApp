@@ -60,8 +60,6 @@ function AddExperienceScreen({ data, index }) {
     request: updateProfile,
   } = useApi(candidateApi.updateProfile);
 
-  console.log(index);
-
   const handleAddSubmit = (values) => {
     const val = {
       ...values,
@@ -75,7 +73,6 @@ function AddExperienceScreen({ data, index }) {
     else if (!startDate) return setStartDateError(true);
 
     const experience = [...data.experience, val];
-    console.log(experience);
     updateProfile(data.id, { experience });
     navigation.goBack();
   };
@@ -95,7 +92,6 @@ function AddExperienceScreen({ data, index }) {
     // const experience = [...data.experience.splice(index, 1, val)];
     const experience = data.experience;
     experience.splice(index, 1, val);
-    console.log(experience);
     updateProfile(data.id, { experience });
     navigation.goBack();
   };
@@ -145,7 +141,6 @@ function AddExperienceScreen({ data, index }) {
             label="From"
             minDate={null}
             onDateChange={(date, timestamp) => {
-              console.log(timestamp, "dob");
               setStartDate(timestamp);
             }}
             value={startDate ? formattedNumericDate(startDate) : null}
@@ -157,7 +152,6 @@ function AddExperienceScreen({ data, index }) {
             label="To"
             minDate={null}
             onDateChange={(date, timestamp) => {
-              console.log(date, "dob");
               setEndDate(timestamp);
             }}
             disabled={present}

@@ -56,8 +56,6 @@ function AddPatentsScreen({ data, index }) {
 
   const { request: updateProfile } = useApi(candidateApi.updateProfile);
 
-  console.log(data, "AAAAAAAAAAAAAAAAAAAAAAAAAaaa");
-
   const handleAddSubmit = (values) => {
     const val = {
       ...values,
@@ -67,7 +65,7 @@ function AddPatentsScreen({ data, index }) {
     };
 
     const patents = [...data.patents, val];
-    console.log(patents);
+
     updateProfile(data.id, { patents });
     navigation.goBack();
   };
@@ -82,7 +80,7 @@ function AddPatentsScreen({ data, index }) {
 
     const patents = data.patents;
     patents.splice(index, 1, val);
-    console.log(patents);
+
     updateProfile(data.id, { patents });
     navigation.goBack();
   };

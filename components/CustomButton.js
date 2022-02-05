@@ -13,6 +13,7 @@ function CustomButton(props) {
         ...props.style,
       }}
     >
+      {props.icon}
       <Text style={{ ...styles.titleStyle, ...props.titleStyle }}>
         {props.title}
       </Text>
@@ -31,6 +32,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     alignSelf: "center",
     backgroundColor: Colors.primary,
+    flexDirection: "row",
   },
   titleStyle: {
     fontFamily: "OpenSans-Medium",

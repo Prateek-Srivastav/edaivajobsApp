@@ -21,7 +21,6 @@ function PatentDetails({ data, patent, index, viewing }) {
   const navigation = useNavigation();
 
   const { request: updateProfile } = useApi(candidateApi.updateProfile);
-  console.log(data);
 
   const deleteHandler = () => {
     const patents = data.patents;

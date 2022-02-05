@@ -26,11 +26,16 @@ import { formattedDate } from "../utilities/date";
 import NetworkError from "../components/NetworkError";
 import Error from "../components/Error";
 import Loading from "../components/Loading";
+import { useIsFocused } from "@react-navigation/native";
+import interviewApi from "../api/interview";
 
 const { width, height } = Dimensions.get("window");
 
 function HomeScreen({ navigation }) {
   const [isPressed, setIsPressed] = useState(false);
+  const [interviews, setInterviews] = useState([]);
+
+  const isFocused = useIsFocused();
 
   const {
     data,
@@ -40,6 +45,14 @@ function HomeScreen({ navigation }) {
     request: loadJobs,
   } = useApi(jobsApi.getJobs);
 
+  const {
+    data: interviewData,
+    // error,
+    // networkError,
+    loading: interviewLoading,
+    request: loadInterviews,
+  } = useApi(interviewApi.getInterviews);
+
   let jobs;
 
   if (data) {
@@ -48,7 +61,12 @@ function HomeScreen({ navigation }) {
 
   useEffect(() => {
     loadJobs();
-  }, []);
+    loadInterviews();
+  }, [isFocused]);
+
+  if (interviewData) setInterviews(interviewData);
+
+  console.log(interviewData, "aaaaaaaa");
 
   const getData = (val) => {
     setIsPressed(false);
@@ -91,38 +109,44 @@ function HomeScreen({ navigation }) {
             <Feather name="filter" size={23} color={Colors.primary} />
           </TouchableOpacity>
         </View>
-        {loading ? (
+        {loading || interviewLoading ? (
           <Loading />
         ) : (
           <>
-            <TouchableOpacity style={styles.reminderContainer}>
-              <Image
-                source={require("../assets/bell.png")}
-                resizeMode="contain"
-                style={{ height: 30, width: 30 }}
-              />
-              <View style={{ flex: 1, marginHorizontal: 10 }}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: "OpenSans-SemiBold",
-                    color: Colors.primary,
-                  }}
-                >
-                  Interview Reminder
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 13,
-                    fontFamily: "OpenSans-Regular",
-                    color: "#6C6C6C",
-                  }}
-                >
-                  You have an interview schedule today at 2 pm
-                </Text>
-              </View>
-              <AntDesign name="rightsquare" size={35} color={Colors.primary} />
-            </TouchableOpacity>
+            {!interviews.length === 0 && (
+              <TouchableOpacity style={styles.reminderContainer}>
+                <Image
+                  source={require("../assets/bell.png")}
+                  resizeMode="contain"
+                  style={{ height: 30, width: 30 }}
+                />
+                <View style={{ flex: 1, marginHorizontal: 10 }}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontFamily: "OpenSans-SemiBold",
+                      color: Colors.primary,
+                    }}
+                  >
+                    Interview Reminder
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      fontFamily: "OpenSans-Regular",
+                      color: "#6C6C6C",
+                    }}
+                  >
+                    You have an interview schedule today at 2 pm
+                  </Text>
+                </View>
+                <AntDesign
+                  name="rightsquare"
+                  size={35}
+                  color={Colors.primary}
+                />
+              </TouchableOpacity>
+            )}
             <View style={styles.filterContainer}>
               <Text style={styles.greyText}>Filter</Text>
               <View style={styles.line} />

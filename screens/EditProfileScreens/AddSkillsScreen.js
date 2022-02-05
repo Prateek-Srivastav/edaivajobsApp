@@ -30,8 +30,6 @@ function AddSkillsScreen({ data, index }) {
     request: updateProfile,
   } = useApi(candidateApi.updateProfile);
 
-  console.log(index);
-
   const handleAddSubmit = (values) => {
     const val = {
       ...values,
@@ -39,7 +37,7 @@ function AddSkillsScreen({ data, index }) {
     };
 
     const skills = [...data.skills, val];
-    console.log(skills);
+
     updateProfile(data.id, { skills });
     navigation.goBack();
   };
@@ -52,7 +50,7 @@ function AddSkillsScreen({ data, index }) {
 
     const skills = data.skills;
     skills.splice(index, 1, val);
-    console.log(skills);
+
     updateProfile(data.id, { skills });
     navigation.goBack();
   };

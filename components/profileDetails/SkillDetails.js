@@ -26,7 +26,6 @@ function SkillDetails({ data, skill, index, viewing }) {
     loading,
     request: updateProfile,
   } = useApi(candidateApi.updateProfile);
-  console.log(data);
 
   const deleteHandler = () => {
     const skills = data.skills;

@@ -53,8 +53,6 @@ function AddCertificationsScreen({ data, index }) {
 
   const { request: updateProfile } = useApi(candidateApi.updateProfile);
 
-  console.log(index);
-
   const handleAddSubmit = (values) => {
     const val = {
       ...values,
@@ -64,7 +62,7 @@ function AddCertificationsScreen({ data, index }) {
     };
 
     const certifications = [...data.certifications, val];
-    console.log(certifications);
+
     updateProfile(data.id, { certifications });
     navigation.goBack();
   };
@@ -79,7 +77,7 @@ function AddCertificationsScreen({ data, index }) {
 
     const certifications = data.certifications;
     certifications.splice(index, 1, val);
-    console.log(certifications);
+
     updateProfile(data.id, { certifications });
     navigation.goBack();
   };
@@ -115,7 +113,6 @@ function AddCertificationsScreen({ data, index }) {
             label="From"
             minDate={null}
             onDateChange={(date, timestamp) => {
-              console.log(timestamp, "dob");
               setIssuedDate(timestamp);
               setIssuedDateError(false);
             }}

@@ -31,8 +31,6 @@ function AddPublicationsScreen({ data, index }) {
 
   const { request: updateProfile } = useApi(candidateApi.updateProfile);
 
-  console.log(data, "AAAAAAAAAAAAAAAAAAAAAAAAAaaa");
-
   const handleAddSubmit = (values) => {
     const val = {
       ...values,
@@ -40,7 +38,7 @@ function AddPublicationsScreen({ data, index }) {
     };
 
     const publications = [...data.publications, val];
-    console.log(publications);
+
     updateProfile(data.id, { publications });
     navigation.goBack();
   };
@@ -53,7 +51,7 @@ function AddPublicationsScreen({ data, index }) {
 
     const publications = data.publications;
     publications.splice(index, 1, val);
-    console.log(publications);
+
     updateProfile(data.id, { publications });
     navigation.goBack();
   };

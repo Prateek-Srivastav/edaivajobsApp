@@ -74,6 +74,10 @@ function AppModal(props) {
     top.value = withSpring(0, SPRING_CONFIG);
   }
 
+  // if (!props.isPressed) {
+  //   top.value = withSpring(dimensions.height, SPRING_CONFIG);
+  // }
+
   return (
     <PanGestureHandler onGestureEvent={gestureHandler}>
       <Animated.View style={[styles.modalContainer, style]}>
@@ -95,7 +99,7 @@ function AppModal(props) {
           </View>
           <View style={styles.line} />
           {props.children}
-          <View
+          {/* <View
             style={{
               flexDirection: "row",
               // flex: 2,
@@ -123,6 +127,7 @@ function AppModal(props) {
                 onPress={() => {
                   top.value = withSpring(dimensions.height, SPRING_CONFIG);
                   setIsPressed();
+                  props.onResetPress();
                 }}
               />
             )}
@@ -132,6 +137,7 @@ function AppModal(props) {
               }
               style={{ width: `${100 / props.numOfButton}%` }}
               onPress={() => {
+                props.onApplyPress();
                 top.value = withSpring(dimensions.height, SPRING_CONFIG);
                 setIsPressed();
                 Toast.show({
@@ -140,7 +146,7 @@ function AppModal(props) {
                 });
               }}
             />
-          </View>
+          </View> */}
         </View>
       </Animated.View>
     </PanGestureHandler>

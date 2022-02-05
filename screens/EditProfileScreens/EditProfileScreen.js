@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
 
 import cache from "../../utilities/cache";
 import candidateApi from "../../api/candidate";
@@ -33,6 +34,7 @@ import AchievementDetails from "../../components/profileDetails/AchievementDetai
 import PublicationDetails from "../../components/profileDetails/PublicationDetails";
 import PatentDetails from "../../components/profileDetails/PatentDetails";
 import SocialLinkDetails from "../../components/profileDetails/SocialLinkDetails";
+import Toast from "react-native-toast-message";
 
 const { width, height } = Dimensions.get("window");
 
@@ -52,6 +54,8 @@ function EditProfileScreen() {
   const [user, setUser] = useState({});
   const [aboutFocused, setAboutFocused] = useState(false);
   const [about, setAbout] = useState();
+  const [galleryPermission, setGalleryPermission] = useState(null);
+  const [imageUri, setImageUri] = useState("../../assets/dummyDP.png");
 
   const navigation = useNavigation();
 
@@ -82,7 +86,86 @@ function EditProfileScreen() {
     const userDetail = await cache.get("user");
     setUser(userDetail);
     setAbout(data.description);
+    async () => {
+      const { granted } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      setGalleryPermission(granted);
+    };
   }, [isFocused]);
+
+  const {
+    // data,
+    // error,
+    request: updateProfilePic,
+  } = useApi(candidateApi.uploadProfilePicture);
+
+  const uploadImage = (binImg) => {
+    const form = new FormData();
+    form.append("image[image]", {
+      name: "media_file",
+      uri: binImg,
+      type: "image/jpg",
+    });
+    const headers = {
+      "Content-Type": "multipart/form-data",
+    };
+    updateProfilePic(form);
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+      base64: true,
+    });
+    // result.base64
+
+    function binEncode(data) {
+      var binArray = [];
+      var datEncode = "";
+
+      for (var i = 0; i < data.length; i++) {
+        binArray.push(data[i].charCodeAt(0).toString(2));
+      }
+      for (var j = 0; j < binArray.length; j++) {
+        var pad = padding_left(binArray[j], "0", 8);
+        datEncode += pad + " ";
+      }
+      function padding_left(s, c, n) {
+        if (!s || !c || s.length >= n) {
+          return s;
+        }
+        var max = (n - s.length) / c.length;
+        for (var i = 0; i < max; i++) {
+          s = c + s;
+        }
+        return s;
+      }
+      console.log(JSON.stringify(binArray));
+
+      return binArray;
+    }
+
+    if (!result.cancelled) {
+      const data = new FormData();
+      //   data.append("image", {
+      //     name: "media_file",
+      //     filename:
+      //  })
+
+      setImageUri(result.uri);
+      binEncode(result.base64);
+      uploadImage(imageUri);
+    }
+  };
+
+  if (galleryPermission === false)
+    return Toast.show({
+      type: "appError",
+      text1: "No access to media storage.",
+    });
 
   if (networkError && !loading) return <NetworkError onPress={loadProfile} />;
 
@@ -168,10 +251,12 @@ function EditProfileScreen() {
           marginBottom: 5,
         }}
       >
-        <Image
-          source={require("../../assets/dummyDP.png")}
-          style={{ height: 70, width: 70, marginRight: 5, marginLeft: 8 }}
-        />
+        <TouchableOpacity onPress={pickImage}>
+          <Image
+            source={{ uri: imageUri }}
+            style={{ height: 70, width: 70, marginRight: 5, marginLeft: 8 }}
+          />
+        </TouchableOpacity>
         <View style={{ width: "70%", marginRight: 5 }}>
           <LargeText>
             {user.firstname} {user.lastname}

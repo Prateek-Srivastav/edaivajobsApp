@@ -21,7 +21,6 @@ function ProjectDetails({ data, project, index, viewing }) {
   const navigation = useNavigation();
 
   const { request: updateProfile } = useApi(candidateApi.updateProfile);
-  console.log(data);
 
   const deleteHandler = () => {
     const projects = data.projects;

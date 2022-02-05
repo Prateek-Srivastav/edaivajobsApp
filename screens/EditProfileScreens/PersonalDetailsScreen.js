@@ -140,7 +140,6 @@ function PersonalDetailsScreen({ data: profileData }) {
           onDateChange={(date) => {
             setDob(date);
             setDobError(false);
-            console.log(dob, "dob");
           }}
           value={dob}
         />

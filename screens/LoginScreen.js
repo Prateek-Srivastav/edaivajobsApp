@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -20,6 +20,7 @@ import authApi from "../api/auth";
 import AuthContext from "../auth/context";
 import authStorage from "../auth/storage";
 import cache from "../utilities/cache";
+import useApi from "../hooks/useApi";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -54,6 +55,24 @@ function LoginScreen({ navigation }) {
     authContext.setTokens({ access, refresh });
     authStorage.storeToken(access, refresh);
     cache.store("user", user);
+  };
+
+  const {
+    data: googleLoginData,
+    error,
+    networkError,
+    loading: googleLoginLoading,
+    request: googleLogin,
+  } = useApi(authApi.googleLogin);
+
+  useEffect(() => googleLogin(), []);
+
+  const handleGoogleLogin = async () => {
+    // googleLogin();
+
+    console.log(googleLoginData.redirect_url);
+    const response = await fetch(googleLoginData.redirect_url);
+    console.log(response);
   };
 
   return (
@@ -141,6 +160,7 @@ function LoginScreen({ navigation }) {
           <TouchableOpacity
             activeOpacity={0.5}
             style={{ ...styles.thirdPartyAuthContainer, marginEnd: 20 }}
+            onPress={handleGoogleLogin}
           >
             <Image
               source={require("../assets/google.png")}

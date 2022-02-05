@@ -25,7 +25,6 @@ function AcademicDetails({ data, academic, index, viewing }) {
     loading,
     request: updateProfile,
   } = useApi(candidateApi.updateProfile);
-  console.log(data);
 
   const deleteHandler = () => {
     const academic = data.qualification;

@@ -15,6 +15,9 @@ import Colors from "../constants/Colors";
 import { BuildingIcon, Location } from "../assets/svg/icons";
 import CustomAlert from "./CustomAlert";
 import CustomButton from "./CustomButton";
+import applicationApi from "../api/application";
+import useApi from "../hooks/useApi";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 const ApplicationStatus = ({ applicationStatus }) => {
   let bgColor;
@@ -61,6 +64,33 @@ const ApplicationStatus = ({ applicationStatus }) => {
 const ApplicationItemCard = (props) => {
   const [visible, setVisible] = useState(false);
 
+  const {
+    data,
+    loading,
+    error,
+    networkError,
+    request: revokeApplication,
+  } = useApi(applicationApi.deleteApplication);
+
+  const revokeHandler = async () => {
+    await revokeApplication(props.applicationId);
+    setVisible(false);
+    if (error)
+      return Toast.show({
+        type: "appError",
+        text1: "Something went wrong",
+      });
+    else if (loading)
+      return Toast.show({
+        type: "appWarning",
+        text1: "Revoking...",
+      });
+    Toast.show({
+      type: "appInfo",
+      text1: "Application revoked!",
+    });
+  };
+
   const RevokeApplication = () => {
     return (
       <CustomAlert visible={visible}>
@@ -93,6 +123,7 @@ const ApplicationItemCard = (props) => {
           }}
         >
           <CustomButton
+            onPress={revokeHandler}
             title="Revoke"
             titleStyle={{ color: Colors.primary }}
             style={{ backgroundColor: "#FFFFFF", elevation: 3 }}

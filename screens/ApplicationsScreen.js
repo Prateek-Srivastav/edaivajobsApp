@@ -65,6 +65,7 @@ function ApplicationsScreen({ navigation }) {
                   applicationStatus: itemData.item.status,
                 })
               }
+              applicationId={itemData.item._id.$oid}
               heading={job_title}
               companyName={company[0].name}
               location={location}

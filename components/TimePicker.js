@@ -22,14 +22,15 @@ function TimePicker({ onTimeChange }) {
     if (hrs <= 9) hrs = "0" + hrs;
     if (mins < 10) mins = "0" + mins;
 
+    setShow(false);
     setSelectedTime(hrs + ":" + mins + ` ${ampm}`);
     setInitialTime(time);
-    setShow(false);
   };
 
   return (
     <>
       <AppPicker
+        dateTimePicker
         titleStyle={selectedTime ? styles.dateTimeText : ""}
         onPress={() => {
           setShow(true);

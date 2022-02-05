@@ -21,7 +21,6 @@ function PublicationDetails({ data, publication, index, viewing }) {
   const navigation = useNavigation();
 
   const { request: updateProfile } = useApi(candidateApi.updateProfile);
-  console.log(data);
 
   const deleteHandler = () => {
     const publications = data.publications;

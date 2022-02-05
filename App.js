@@ -40,7 +40,7 @@ export default function App() {
 
   const restoreToken = async () => {
     const storedTokens = await authStorage.getToken();
-    console.log(storedTokens);
+
     if (!storedTokens.refreshToken) return;
     setTokens(storedTokens);
   };
